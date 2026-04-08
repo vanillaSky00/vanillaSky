@@ -1,0 +1,219 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { url } from '../../config';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+// Adjacent posts for prev/next
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const idx = allPosts.findIndex(p => p.slug === post.slug);
+const prev = allPosts[idx + 1] ?? null;
+const next = allPosts[idx - 1] ?? null;
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+
+  <article class="post section container">
+
+    <a href={url('/blog')} class="post-back label">← Writing</a>
+
+    <header class="post-header stagger">
+      <div class="post-header__meta">
+        <span class="label post-header__date">
+          {post.data.date.toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </span>
+      </div>
+      <h1 class="post-header__title">{post.data.title}</h1>
+      <p class="post-header__desc">{post.data.description}</p>
+      <div class="post-header__tags">
+        {post.data.tags.map(tag => (
+          <span class="post-tag label">{tag}</span>
+        ))}
+      </div>
+    </header>
+
+    <div class="post-body prose">
+      <Content />
+    </div>
+
+    <nav class="post-nav" aria-label="Post navigation">
+      {next ? (
+        <a href={url(`/blog/${next.slug}`)} class="post-nav__item post-nav__item--prev">
+          <span class="label post-nav__direction">← Newer</span>
+          <span class="post-nav__name">{next.data.title}</span>
+        </a>
+      ) : <span />}
+      {prev ? (
+        <a href={url(`/blog/${prev.slug}`)} class="post-nav__item post-nav__item--next">
+          <span class="label post-nav__direction">Older →</span>
+          <span class="post-nav__name">{prev.data.title}</span>
+        </a>
+      ) : <span />}
+    </nav>
+
+  </article>
+
+</BaseLayout>
+
+<style>
+.post {
+  padding-top: calc(4rem + 3rem);
+  max-width: 720px;
+}
+
+.post-back {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-muted);
+  margin-bottom: 2.5rem;
+  transition: color 0.2s;
+}
+.post-back:hover { color: var(--ink); }
+
+.post-header { margin-bottom: 3rem; }
+
+.post-header__date {
+  color: var(--ink-faint);
+  font-size: 0.68rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.post-header__title {
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 1.2rem;
+}
+
+.post-header__desc {
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 58ch;
+  margin-bottom: 1.2rem;
+}
+
+.post-header__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.post-tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-faint);
+  border: 1px solid var(--border-strong);
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+}
+
+/* ─── Prose ─────────────────────────────────────────────── */
+.prose {
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  max-width: 65ch;
+  border-top: 1px solid var(--border);
+  padding-top: 2.5rem;
+  margin-bottom: 4rem;
+}
+
+.prose :global(p) { margin-bottom: 1.4em; }
+.prose :global(h2) {
+  font-size: 1.6rem;
+  color: var(--ink);
+  margin-top: 2.5em;
+  margin-bottom: 0.7em;
+}
+.prose :global(h3) {
+  font-size: 1.2rem;
+  color: var(--ink);
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+.prose :global(ul), .prose :global(ol) {
+  padding-left: 1.5rem;
+  margin-bottom: 1.4em;
+}
+.prose :global(li) { margin-bottom: 0.4em; }
+.prose :global(a) {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose :global(blockquote) {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.2rem;
+  color: var(--ink-faint);
+  font-style: italic;
+  margin-block: 1.5em;
+}
+.prose :global(code) {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--bg-secondary);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+.prose :global(pre) {
+  background: var(--bg-secondary);
+  padding: 1.2rem 1.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-block: 1.5em;
+}
+.prose :global(pre code) { background: none; padding: 0; }
+.prose :global(img) {
+  width: 100%;
+  border-radius: 2px;
+  margin-block: 1.5em;
+}
+.prose :global(hr) {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-block: 2.5em;
+}
+
+/* ─── Post Nav ──────────────────────────────────────────── */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--border);
+}
+
+.post-nav__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: opacity 0.2s;
+}
+.post-nav__item:hover { opacity: 0.6; }
+.post-nav__item--next { text-align: right; }
+
+.post-nav__direction {
+  font-size: 0.68rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-faint);
+}
+
+.post-nav__name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+</style>

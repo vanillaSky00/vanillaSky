@@ -1,0 +1,259 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_CONFIG, url } from '../config';
+---
+
+<BaseLayout title="About" description="Harris Su — software designer from Taipei, studying at NCKU.">
+
+  <div class="about-page section container">
+
+    <!-- ─── Header ──────────────────────────────────────── -->
+    <header class="about-header stagger">
+      <p class="label about-header__eyebrow">About</p>
+      <h1 class="about-header__title">
+        Hi, I'm<br/>
+        <em>Harris Su.</em>
+      </h1>
+    </header>
+
+    <!-- ─── Content ─────────────────────────────────────── -->
+    <div class="about-grid">
+
+      <aside class="about-portrait">
+        {SITE_CONFIG.PORTRAIT ? (
+          <img src={url(SITE_CONFIG.PORTRAIT)} alt={SITE_CONFIG.TITLE} class="about-portrait__img" />
+        ) : (
+          <div class="about-portrait__placeholder img-placeholder"><span>Portrait</span></div>
+        )}
+      </aside>
+
+      <div class="about-content stagger">
+
+        <p class="about-lead">
+          A software designer from Taipei currently studying at
+          National Cheng Kung University.
+        </p>
+
+        <p class="about-body">
+          My world exists at the intersection of rigid logic and fluid motion.
+          By day I engineer AI agents and tackle cybersecurity challenges.
+          By design, I craft intuitive applications and artistic graphics.
+        </p>
+
+        <p class="about-body">
+          Outside of screens, figure skating is where I find the same tension
+          between technical precision and expressive freedom that drives all
+          my work. Each project asks the same question: how much structure
+          before it stops breathing?
+        </p>
+
+        <!-- Expertise -->
+        <div class="about-expertise">
+          <p class="label about-expertise__title">Areas of Focus</p>
+          <div class="about-expertise__list">
+            {[
+              ['Software Architecture', 'AI agents, system design, cybersecurity'],
+              ['Web & App Design', 'React, Astro, full-stack development'],
+              ['Graphic Design', 'Poster design, identity, typography'],
+              ['Figure Skating', 'Performance, creative direction'],
+            ].map(([area, detail]) => (
+              <div class="about-expertise__item">
+                <span class="about-expertise__area label">{area}</span>
+                <span class="about-expertise__detail">{detail}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Contact CTA -->
+        <div class="about-contact">
+          <p class="label about-contact__label">Get in touch</p>
+          <a href={`mailto:${SITE_CONFIG.EMAIL}`} class="about-contact__email">
+            {SITE_CONFIG.EMAIL}
+          </a>
+          <div class="about-contact__socials">
+            <a href={SITE_CONFIG.SOCIAL.instagram} class="label" target="_blank" rel="noopener">
+              Instagram
+            </a>
+            <span class="about-contact__sep" aria-hidden="true">·</span>
+            <a href={SITE_CONFIG.SOCIAL.linkedin} class="label" target="_blank" rel="noopener">
+              LinkedIn
+            </a>
+            <span class="about-contact__sep" aria-hidden="true">·</span>
+            <a href={SITE_CONFIG.SOCIAL.github} class="label" target="_blank" rel="noopener">
+              GitHub
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+.about-page {
+  padding-top: calc(4rem + var(--section-gap));
+}
+
+.about-header {
+  margin-bottom: 4rem;
+}
+
+.about-header__eyebrow {
+  color: var(--ink-faint);
+  margin-bottom: 1rem;
+}
+
+.about-header__title {
+  font-size: clamp(3.5rem, 7vw, 8rem);
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+}
+
+.about-header__title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.about-portrait {
+  aspect-ratio: 3/4;
+  width: 100%;
+  position: sticky;
+  top: 5rem;
+  overflow: hidden;
+}
+
+.about-portrait__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.about-portrait__placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.about-lead {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.about-body {
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  max-width: 52ch;
+}
+
+/* Expertise grid */
+.about-expertise {
+  margin-top: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.about-expertise__title {
+  color: var(--ink-faint);
+  margin-bottom: 1.5rem;
+}
+
+.about-expertise__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.about-expertise__item {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 2rem;
+  padding-block: 0.9rem;
+  border-bottom: 1px solid var(--border);
+  align-items: baseline;
+}
+
+.about-expertise__area {
+  font-size: 0.68rem;
+  letter-spacing: 0.10em;
+  color: var(--ink);
+}
+
+.about-expertise__detail {
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+/* Contact */
+.about-contact {
+  margin-top: 1.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.about-contact__label {
+  color: var(--ink-faint);
+  margin-bottom: 0.75rem;
+}
+
+.about-contact__email {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  transition: opacity 0.2s;
+}
+.about-contact__email:hover { opacity: 0.7; }
+
+.about-contact__socials {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.about-contact__socials a {
+  font-size: 0.72rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-muted);
+  transition: color 0.2s;
+}
+.about-contact__socials a:hover { color: var(--ink); }
+
+.about-contact__sep { color: var(--ink-faint); }
+
+@media (max-width: 900px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .about-portrait {
+    position: static;
+    aspect-ratio: 16/9;
+  }
+  .about-expertise__item {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
+</style>

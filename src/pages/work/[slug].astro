@@ -1,0 +1,271 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { PROJECTS } from '../../data/projects';
+import { url } from '../../config';
+
+export async function getStaticPaths() {
+  return PROJECTS.map((p) => ({
+    params: { slug: p.slug },
+    props: { project: p },
+  }));
+}
+
+const { project } = Astro.props;
+
+// Adjacent projects for prev/next
+const idx = PROJECTS.findIndex(p => p.slug === project.slug);
+const prev = PROJECTS[idx - 1] ?? null;
+const next = PROJECTS[idx + 1] ?? null;
+---
+
+<BaseLayout title={project.title} description={project.description}>
+
+  <article class="project-page section container">
+
+    <!-- ─── Back ─────────────────────────────────────────── -->
+    <a href={url('/')} class="project-back label">← All Work</a>
+
+    <!-- ─── Header ──────────────────────────────────────── -->
+    <header class="project-header stagger">
+      <div class="project-header__meta">
+        <span class="label project-header__category">{project.category}</span>
+        <span class="label project-header__year">{project.year}</span>
+      </div>
+      <h1 class="project-header__title">
+        {project.title}
+        {project.subtitle && (
+          <em class="project-header__subtitle"> — {project.subtitle}</em>
+        )}
+      </h1>
+      <p class="project-header__desc">{project.longDescription}</p>
+
+      <div class="project-header__tags">
+        {project.tags.map(tag => (
+          <span class="project-tag label">{tag}</span>
+        ))}
+      </div>
+
+      {(project.link || project.github) && (
+        <div class="project-header__links">
+          {project.link && (
+            <a href={project.link} class="project-link label" target="_blank" rel="noopener">
+              Live Project ↗
+            </a>
+          )}
+          {project.github && (
+            <a href={project.github} class="project-link label" target="_blank" rel="noopener">
+              GitHub ↗
+            </a>
+          )}
+        </div>
+      )}
+    </header>
+
+    <!-- ─── Cover Image ──────────────────────────────────── -->
+    <div class="project-cover">
+      {project.coverImage ? (
+        <img
+          src={url(project.coverImage)}
+          alt={`${project.title} cover`}
+          class="project-cover__img"
+        />
+      ) : (
+        <div class="project-cover__placeholder img-placeholder">
+          <span>{project.title}</span>
+        </div>
+      )}
+    </div>
+
+    <!-- ─── Gallery ──────────────────────────────────────── -->
+    {project.images && project.images.length > 0 && (
+      <section class="project-gallery" aria-label="Project images">
+        {project.images.map((img, i) => (
+          <div class="project-gallery__item">
+            {img ? (
+              <img src={url(img)} alt={`${project.title} image ${i + 1}`} loading="lazy" />
+            ) : (
+              <div class="img-placeholder" style="aspect-ratio:16/9">
+                <span>Image {i + 1}</span>
+              </div>
+            )}
+          </div>
+        ))}
+      </section>
+    )}
+
+    <!-- ─── Navigation ───────────────────────────────────── -->
+    <nav class="project-nav" aria-label="Project navigation">
+      {prev ? (
+        <a href={url(`/work/${prev.slug}`)} class="project-nav__item project-nav__item--prev">
+          <span class="label project-nav__direction">← Previous</span>
+          <span class="project-nav__name">{prev.title}</span>
+        </a>
+      ) : <span />}
+
+      {next ? (
+        <a href={url(`/work/${next.slug}`)} class="project-nav__item project-nav__item--next">
+          <span class="label project-nav__direction">Next →</span>
+          <span class="project-nav__name">{next.title}</span>
+        </a>
+      ) : <span />}
+    </nav>
+
+  </article>
+
+</BaseLayout>
+
+<style>
+.project-page {
+  padding-top: calc(4rem + 3rem);
+  max-width: 860px;
+}
+
+.project-back {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-muted);
+  margin-bottom: 2.5rem;
+  transition: color 0.2s;
+}
+.project-back:hover { color: var(--ink); }
+
+.project-header {
+  margin-bottom: 3rem;
+}
+
+.project-header__meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.project-header__category {
+  color: var(--accent);
+  font-size: 0.68rem;
+}
+
+.project-header__year {
+  color: var(--ink-faint);
+  font-size: 0.68rem;
+}
+
+.project-header__title {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  line-height: 1.05;
+}
+
+.project-header__subtitle {
+  font-style: italic;
+  opacity: 0.5;
+}
+
+.project-header__desc {
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  max-width: 60ch;
+  margin-bottom: 1.5rem;
+}
+
+.project-header__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.project-tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-faint);
+  border: 1px solid var(--border-strong);
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+}
+
+.project-header__links {
+  display: flex;
+  gap: 2rem;
+}
+
+.project-link {
+  font-size: 0.72rem;
+  letter-spacing: 0.10em;
+  color: var(--accent);
+  transition: opacity 0.2s;
+}
+.project-link:hover { opacity: 0.6; }
+
+/* Cover */
+.project-cover {
+  margin-bottom: 2rem;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.project-cover__img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.project-cover__placeholder {
+  aspect-ratio: 16/9;
+}
+
+/* Gallery */
+.project-gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 4rem;
+}
+
+.project-gallery__item { overflow: hidden; border-radius: 2px; }
+.project-gallery__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease);
+}
+.project-gallery__item:hover img { transform: scale(1.04); }
+
+/* Nav */
+.project-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--border);
+}
+
+.project-nav__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: opacity 0.2s;
+}
+.project-nav__item:hover { opacity: 0.6; }
+
+.project-nav__item--next {
+  text-align: right;
+}
+
+.project-nav__direction {
+  font-size: 0.68rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-faint);
+}
+
+.project-nav__name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+@media (max-width: 600px) {
+  .project-gallery { grid-template-columns: 1fr; }
+}
+</style>

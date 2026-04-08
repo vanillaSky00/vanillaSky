@@ -1,0 +1,160 @@
+---
+import { SITE_CONFIG, url } from '../config';
+---
+
+<header class="nav" id="site-nav">
+  <div class="nav__inner container">
+
+    <a href={url('/')} class="nav__logo">
+      <span class="nav__logo-name">{SITE_CONFIG.TITLE}</span>
+      <span class="nav__logo-role label">{SITE_CONFIG.TAGLINE}</span>
+    </a>
+
+    <nav class="nav__links" aria-label="Main navigation">
+      {SITE_CONFIG.NAV.map((item) => (
+        <a href={url(item.href)} class="nav__link label">
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <button
+      class="nav__theme-btn"
+      id="theme-toggle"
+      aria-label="Toggle dark mode"
+      title="Toggle dark/light mode"
+    >
+      <span class="theme-icon theme-icon--sun">☀</span>
+      <span class="theme-icon theme-icon--moon">◗</span>
+    </button>
+
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('theme-toggle')!;
+  const html = document.documentElement;
+
+  function applyTheme(theme: string) {
+    html.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }
+
+  btn.addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+
+  // Scroll behaviour
+  const nav = document.getElementById('site-nav')!;
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const current = window.scrollY;
+    nav.classList.toggle('nav--hidden', current > lastScroll && current > 80);
+    nav.classList.toggle('nav--scrolled', current > 40);
+    lastScroll = current;
+  }, { passive: true });
+</script>
+
+<style>
+.nav {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 100;
+  transition: transform 0.4s var(--ease), background 0.3s var(--ease), backdrop-filter 0.3s;
+}
+
+.nav--hidden { transform: translateY(-100%); }
+
+.nav--scrolled {
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  height: 4rem;
+}
+
+.nav__logo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  margin-right: auto;
+  transition: opacity 0.2s;
+}
+.nav__logo:hover { opacity: 0.6; }
+
+.nav__logo-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.nav__logo-role {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+
+.nav__links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav__link {
+  font-size: 0.72rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-muted);
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.25s var(--ease);
+}
+
+.nav__link:hover { color: var(--ink); }
+.nav__link:hover::after { width: 100%; }
+
+/* Theme toggle */
+.nav__theme-btn {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--ink-muted);
+  transition: color 0.2s, background 0.2s;
+  font-size: 0.9rem;
+}
+.nav__theme-btn:hover {
+  color: var(--ink);
+  background: var(--border);
+}
+
+.theme-icon { transition: opacity 0.2s; }
+
+[data-theme="light"] .theme-icon--sun  { display: none; }
+[data-theme="light"] .theme-icon--moon { display: block; }
+[data-theme="dark"]  .theme-icon--moon { display: none; }
+[data-theme="dark"]  .theme-icon--sun  { display: block; }
+
+@media (max-width: 600px) {
+  .nav__links { display: none; }
+}
+</style>

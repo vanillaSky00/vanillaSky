@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../config';
+---
+
+<BaseLayout title="404 — Not Found">
+  <div class="not-found section container">
+    <p class="label not-found__code">404</p>
+    <h1 class="not-found__title">Lost<br/><em>in the void.</em></h1>
+    <p class="not-found__desc">That page doesn't exist — or it moved somewhere else.</p>
+    <a href={url('/')} class="not-found__link label">← Back to Home</a>
+  </div>
+</BaseLayout>
+
+<style>
+.not-found {
+  padding-top: calc(4rem + var(--section-gap));
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.not-found__code {
+  color: var(--ink-faint);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+}
+
+.not-found__title {
+  font-size: clamp(3rem, 8vw, 7rem);
+  letter-spacing: -0.04em;
+}
+
+.not-found__title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.not-found__desc {
+  color: var(--ink-muted);
+  max-width: 36ch;
+}
+
+.not-found__link {
+  font-size: 0.72rem;
+  letter-spacing: 0.10em;
+  color: var(--accent);
+  transition: opacity 0.2s;
+}
+.not-found__link:hover { opacity: 0.6; }
+</style>

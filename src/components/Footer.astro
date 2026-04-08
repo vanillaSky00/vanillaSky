@@ -1,0 +1,136 @@
+---
+import { SITE_CONFIG, url } from '../config';
+---
+
+<footer class="footer" id="contact">
+  <div class="container footer__inner">
+
+    <div class="footer__col footer__col--info">
+      <p class="footer__name">{SITE_CONFIG.TITLE}</p>
+      <p class="footer__desc label">{SITE_CONFIG.DESCRIPTION}</p>
+    </div>
+
+    <div class="footer__col footer__col--contact">
+      <p class="label footer__section-label">Contact</p>
+      <a href={`mailto:${SITE_CONFIG.EMAIL}`} class="footer__email">
+        {SITE_CONFIG.EMAIL}
+      </a>
+      <div class="footer__socials">
+        {SITE_CONFIG.SOCIAL.instagram && (
+          <a href={SITE_CONFIG.SOCIAL.instagram} class="footer__social label" target="_blank" rel="noopener">
+            Instagram
+          </a>
+        )}
+        {SITE_CONFIG.SOCIAL.linkedin && (
+          <a href={SITE_CONFIG.SOCIAL.linkedin} class="footer__social label" target="_blank" rel="noopener">
+            LinkedIn
+          </a>
+        )}
+        {SITE_CONFIG.SOCIAL.github && (
+          <a href={SITE_CONFIG.SOCIAL.github} class="footer__social label" target="_blank" rel="noopener">
+            GitHub
+          </a>
+        )}
+      </div>
+    </div>
+
+    <div class="footer__col footer__col--nav">
+      <p class="label footer__section-label">Navigation</p>
+      <a href={url('/')} class="footer__nav-link label">Work</a>
+      <a href={url('/about')} class="footer__nav-link label">About</a>
+    </div>
+
+  </div>
+
+  <div class="footer__bottom container">
+    <span class="label">© {new Date().getFullYear()} {SITE_CONFIG.TITLE}</span>
+    <span class="footer__diamond" aria-hidden="true">◆</span>
+  </div>
+</footer>
+
+<style>
+.footer {
+  border-top: 1px solid var(--border);
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  margin-top: var(--section-gap);
+}
+
+.footer__inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+}
+
+.footer__name {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.footer__desc {
+  color: var(--ink-muted);
+}
+
+.footer__section-label {
+  color: var(--ink-faint);
+  margin-bottom: 1rem;
+}
+
+.footer__email {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  transition: opacity 0.2s;
+}
+.footer__email:hover { opacity: 0.7; }
+
+.footer__socials {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.footer__social {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  transition: color 0.2s;
+}
+.footer__social:hover { color: var(--ink); }
+
+.footer__col--nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer__nav-link {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  padding-block: 0.3rem;
+  transition: color 0.2s;
+}
+.footer__nav-link:hover { color: var(--ink); }
+
+.footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--ink-faint);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.footer__diamond { color: var(--accent); }
+
+@media (max-width: 700px) {
+  .footer__inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+</style>

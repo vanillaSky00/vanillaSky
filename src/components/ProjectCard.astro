@@ -1,0 +1,210 @@
+---
+import type { Project } from '../data/projects';
+import { url } from '../config';
+
+interface Props {
+  project: Project;
+  index?: number;
+}
+
+const { project, index = 0 } = Astro.props;
+---
+
+<article
+  class="project-card"
+  style={`animation-delay: ${index * 0.08}s`}
+>
+  <a href={url(`/work/${project.slug}`)} class="project-card__link" aria-label={project.title}>
+
+    <div class="project-card__media">
+      {project.coverImage ? (
+        <img
+          src={url(project.coverImage)}
+          alt={project.title}
+          loading="lazy"
+          class="project-card__img"
+        />
+      ) : (
+        <div class="project-card__placeholder img-placeholder">
+          <span>{project.title}</span>
+        </div>
+      )}
+      <div class="project-card__overlay">
+        <span class="project-card__view label">View Project →</span>
+      </div>
+    </div>
+
+    <div class="project-card__body">
+      <div class="project-card__meta">
+        <span class="label project-card__category">{project.category}</span>
+        <span class="label project-card__year">{project.year}</span>
+      </div>
+      <h3 class="project-card__title">
+        {project.title}
+        {project.subtitle && (
+          <span class="project-card__subtitle"> — {project.subtitle}</span>
+        )}
+      </h3>
+      <p class="project-card__desc">{project.description}</p>
+
+      <div class="project-card__tags">
+        {project.tags.slice(0, 3).map((tag) => (
+          <span class="project-card__tag label">{tag}</span>
+        ))}
+      </div>
+    </div>
+
+  </a>
+</article>
+
+<style>
+.project-card {
+  animation: fadeUp 0.6s var(--ease) both;
+  border-bottom: 1px solid var(--border);
+}
+
+.project-card__link {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: stretch;
+  transition: opacity 0.2s;
+}
+
+.project-card__link:hover .project-card__overlay {
+  opacity: 1;
+}
+
+.project-card__link:hover .project-card__img {
+  transform: scale(1.03);
+}
+
+.project-card__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+}
+
+.project-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+
+.project-card__placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+}
+
+.project-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--accent) 85%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+
+.project-card__view {
+  color: #fff;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+}
+
+.project-card__body {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.8rem;
+  border-left: 1px solid var(--border);
+}
+
+.project-card__meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.project-card__category {
+  color: var(--accent);
+  font-size: 0.68rem;
+}
+
+.project-card__year {
+  color: var(--ink-faint);
+  font-size: 0.68rem;
+}
+
+.project-card__title {
+  font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.project-card__subtitle {
+  font-style: italic;
+  opacity: 0.6;
+}
+
+.project-card__desc {
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 36ch;
+}
+
+.project-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.project-card__tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-faint);
+  border: 1px solid var(--border-strong);
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.project-card:hover .project-card__tag {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Alternate layout: odd cards flip image/text */
+.project-card:nth-child(even) .project-card__link {
+  direction: rtl;
+}
+.project-card:nth-child(even) .project-card__body {
+  direction: ltr;
+  border-left: none;
+  border-right: 1px solid var(--border);
+}
+.project-card:nth-child(even) .project-card__media {
+  direction: ltr;
+}
+
+@media (max-width: 700px) {
+  .project-card__link,
+  .project-card:nth-child(even) .project-card__link {
+    grid-template-columns: 1fr;
+    direction: ltr;
+  }
+  .project-card__body,
+  .project-card:nth-child(even) .project-card__body {
+    border: none;
+    border-top: 1px solid var(--border);
+    padding: 1.5rem;
+  }
+  .project-card__media { aspect-ratio: 16/9; }
+}
+</style>
