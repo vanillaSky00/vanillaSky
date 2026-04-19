@@ -1,32 +1,33 @@
 ---
-import type { Project } from '../data/projects';
+import type { CollectionEntry } from 'astro:content';
 import { url } from '../config';
 
 interface Props {
-  project: Project;
+  project: CollectionEntry<'projects'>;
   index?: number;
 }
 
 const { project, index = 0 } = Astro.props;
+const p = project.data;
 ---
 
 <article
   class="project-card"
   style={`animation-delay: ${index * 0.08}s`}
 >
-  <a href={url(`/work/${project.slug}`)} class="project-card__link" aria-label={project.title}>
+  <a href={url(`/work/${project.slug}`)} class="project-card__link" aria-label={p.title}>
 
     <div class="project-card__media">
-      {project.coverImage ? (
+      {p.coverImage ? (
         <img
-          src={url(project.coverImage)}
-          alt={project.title}
+          src={url(p.coverImage)}
+          alt={p.title}
           loading="lazy"
           class="project-card__img"
         />
       ) : (
         <div class="project-card__placeholder img-placeholder">
-          <span>{project.title}</span>
+          <span>{p.title}</span>
         </div>
       )}
       <div class="project-card__overlay">
@@ -36,19 +37,19 @@ const { project, index = 0 } = Astro.props;
 
     <div class="project-card__body">
       <div class="project-card__meta">
-        <span class="label project-card__category">{project.category}</span>
-        <span class="label project-card__year">{project.year}</span>
+        <span class="label project-card__category">{p.category}</span>
+        <span class="label project-card__year">{p.year}</span>
       </div>
       <h3 class="project-card__title">
-        {project.title}
-        {project.subtitle && (
-          <span class="project-card__subtitle"> — {project.subtitle}</span>
+        {p.title}
+        {p.subtitle && (
+          <span class="project-card__subtitle"> — {p.subtitle}</span>
         )}
       </h3>
-      <p class="project-card__desc">{project.description}</p>
+      <p class="project-card__desc">{p.description}</p>
 
       <div class="project-card__tags">
-        {project.tags.slice(0, 3).map((tag) => (
+        {p.tags.slice(0, 3).map((tag) => (
           <span class="project-card__tag label">{tag}</span>
         ))}
       </div>

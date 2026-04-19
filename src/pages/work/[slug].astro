@@ -1,24 +1,29 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { PROJECTS } from '../../data/projects';
+import { getCollection } from 'astro:content';
 import { url } from '../../config';
 
 export async function getStaticPaths() {
-  return PROJECTS.map((p) => ({
+  const projects = await getCollection('projects');
+  return projects.map((p) => ({
     params: { slug: p.slug },
     props: { project: p },
   }));
 }
 
 const { project } = Astro.props;
+const { data: p, slug } = project;
+const { Content } = await project.render();
 
-// Adjacent projects for prev/next
-const idx = PROJECTS.findIndex(p => p.slug === project.slug);
-const prev = PROJECTS[idx - 1] ?? null;
-const next = PROJECTS[idx + 1] ?? null;
+// Adjacent projects for prev/next (sorted by order)
+const allProjects = (await getCollection('projects'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+const idx = allProjects.findIndex(p => p.slug === slug);
+const prev = allProjects[idx - 1] ?? null;
+const next = allProjects[idx + 1] ?? null;
 ---
 
-<BaseLayout title={project.title} description={project.description}>
+<BaseLayout title={p.title} description={p.description}>
 
   <article class="project-page section container">
 
@@ -28,32 +33,32 @@ const next = PROJECTS[idx + 1] ?? null;
     <!-- ─── Header ──────────────────────────────────────── -->
     <header class="project-header stagger">
       <div class="project-header__meta">
-        <span class="label project-header__category">{project.category}</span>
-        <span class="label project-header__year">{project.year}</span>
+        <span class="label project-header__category">{p.category}</span>
+        <span class="label project-header__year">{p.year}</span>
       </div>
       <h1 class="project-header__title">
-        {project.title}
-        {project.subtitle && (
-          <em class="project-header__subtitle"> — {project.subtitle}</em>
+        {p.title}
+        {p.subtitle && (
+          <em class="project-header__subtitle"> — {p.subtitle}</em>
         )}
       </h1>
-      <p class="project-header__desc">{project.longDescription}</p>
+      <p class="project-header__desc">{p.description}</p>
 
       <div class="project-header__tags">
-        {project.tags.map(tag => (
+        {p.tags.map(tag => (
           <span class="project-tag label">{tag}</span>
         ))}
       </div>
 
-      {(project.link || project.github) && (
+      {(p.link || p.github) && (
         <div class="project-header__links">
-          {project.link && (
-            <a href={project.link} class="project-link label" target="_blank" rel="noopener">
+          {p.link && (
+            <a href={p.link} class="project-link label" target="_blank" rel="noopener">
               Live Project ↗
             </a>
           )}
-          {project.github && (
-            <a href={project.github} class="project-link label" target="_blank" rel="noopener">
+          {p.github && (
+            <a href={p.github} class="project-link label" target="_blank" rel="noopener">
               GitHub ↗
             </a>
           )}
@@ -63,26 +68,31 @@ const next = PROJECTS[idx + 1] ?? null;
 
     <!-- ─── Cover Image ──────────────────────────────────── -->
     <div class="project-cover">
-      {project.coverImage ? (
+      {p.coverImage ? (
         <img
-          src={url(project.coverImage)}
-          alt={`${project.title} cover`}
+          src={url(p.coverImage)}
+          alt={`${p.title} cover`}
           class="project-cover__img"
         />
       ) : (
         <div class="project-cover__placeholder img-placeholder">
-          <span>{project.title}</span>
+          <span>{p.title}</span>
         </div>
       )}
     </div>
 
+    <!-- ─── Article body ─────────────────────────────────── -->
+    <div class="project-body prose">
+      <Content />
+    </div>
+
     <!-- ─── Gallery ──────────────────────────────────────── -->
-    {project.images && project.images.length > 0 && (
+    {p.images && p.images.length > 0 && (
       <section class="project-gallery" aria-label="Project images">
-        {project.images.map((img, i) => (
+        {p.images.map((img, i) => (
           <div class="project-gallery__item">
             {img ? (
-              <img src={url(img)} alt={`${project.title} image ${i + 1}`} loading="lazy" />
+              <img src={url(img)} alt={`${p.title} image ${i + 1}`} loading="lazy" />
             ) : (
               <div class="img-placeholder" style="aspect-ratio:16/9">
                 <span>Image {i + 1}</span>
@@ -98,14 +108,14 @@ const next = PROJECTS[idx + 1] ?? null;
       {prev ? (
         <a href={url(`/work/${prev.slug}`)} class="project-nav__item project-nav__item--prev">
           <span class="label project-nav__direction">← Previous</span>
-          <span class="project-nav__name">{prev.title}</span>
+          <span class="project-nav__name">{prev.data.title}</span>
         </a>
       ) : <span />}
 
       {next ? (
         <a href={url(`/work/${next.slug}`)} class="project-nav__item project-nav__item--next">
           <span class="label project-nav__direction">Next →</span>
-          <span class="project-nav__name">{next.title}</span>
+          <span class="project-nav__name">{next.data.title}</span>
         </a>
       ) : <span />}
     </nav>
@@ -214,6 +224,74 @@ const next = PROJECTS[idx + 1] ?? null;
 
 .project-cover__placeholder {
   aspect-ratio: 16/9;
+}
+
+/* ─── Article prose ──────────────────────────────────────── */
+.project-body {
+  margin-bottom: 3rem;
+}
+
+.prose {
+  color: var(--ink);
+  font-size: 1.7rem;
+  line-height: 1.8;
+  max-width: 65ch;
+  border-top: 1px solid var(--border);
+  padding-top: 2.5rem;
+}
+
+.prose :global(p) { margin-bottom: 1.4em; }
+.prose :global(h2) {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-top: 2.5em;
+  margin-bottom: 0.7em;
+}
+.prose :global(h3) {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--ink);
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+.prose :global(ul), .prose :global(ol) {
+  padding-left: 1.5rem;
+  margin-bottom: 1.4em;
+}
+.prose :global(li) { margin-bottom: 0.4em; }
+.prose :global(a) {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose :global(blockquote) {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.2rem;
+  color: var(--ink-faint);
+  font-style: italic;
+  margin-block: 1.5em;
+}
+.prose :global(code) {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--bg-secondary);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+.prose :global(pre) {
+  background: var(--bg-secondary);
+  padding: 1.2rem 1.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-block: 1.5em;
+}
+.prose :global(pre code) { background: none; padding: 0; }
+.prose :global(hr) {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-block: 2.5em;
 }
 
 /* Gallery */

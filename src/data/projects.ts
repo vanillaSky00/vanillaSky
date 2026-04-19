@@ -47,7 +47,7 @@ export const PROJECTS: Project[] = [
     tags: ["AI Agent", "Unity", "3D", "Simulation", "Full-stack", "Game Design"],
     description: "An AI agent that navigates a 3D kitchen to assemble your perfect burger.",
     longDescription:
-      "Paprika is an autonomous AI hamburger worker built in a fully simulated 3D kitchen environment. The agent uses vision-based planning to interpret orders, move between stations, and assemble meals in real time. Built as an exploration of grounded AI embodiment.",
+      "Paprika is an autonomous AI hamburger co-worker built in a fully simulated 3D kitchen environment. The agent uses vision-based planning to interpret orders, move between stations, and assemble meals in real time. Built as an exploration of grounded AI embodiment.",
     coverImage: "/images/paprika-cover.png",
     images: ["/images/paprika-01.jpg", "/images/paprika-02.jpg"],
     slug: "paprika-hamburger-agent",

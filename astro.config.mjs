@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
+import mdx from '@astrojs/mdx';
 
 // ============================================================
 // GLOBAL SITE CONFIG — update BASE_URL when deploying to GitHub Pages
@@ -12,6 +13,6 @@ export const SITE_BASE_URL = "/vanillaSky";
 
 export default defineConfig({
   base: SITE_BASE_URL || "/",
-  integrations: [react()],
+  integrations: [react(), mdx()],
   output: 'static',
 });

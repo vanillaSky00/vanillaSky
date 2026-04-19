@@ -1,14 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { PROJECTS } from '../data/projects';
 import { SITE_CONFIG, url } from '../config';
 import { getCollection } from 'astro:content';
 
-// Show featured first, then rest
-const featured = PROJECTS.filter(p => p.featured);
-const rest = PROJECTS.filter(p => !p.featured);
-const ordered = [...featured, ...rest];
+// Sort: featured first, then by order field
+const allProjects = await getCollection('projects');
+const ordered = allProjects.sort((a, b) => {
+  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+  return (a.data.order ?? 99) - (b.data.order ?? 99);
+});
 
 // Latest 3 blog posts
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
@@ -55,7 +56,7 @@ const posts = allPosts
   <div class="divider container">
     <span class="label divider__label">Selected Work</span>
     <div class="divider__line"></div>
-    <span class="label divider__count">{ordered.length} projects</span>
+    <span class="label divider__count">{ordered.length} project{ordered.length !== 1 ? 's' : ''}</span>
   </div>
 
   <!-- ─── Project List ─────────────────────────────────── -->

@@ -1,0 +1,142 @@
+---
+title: "Paprika"
+subtitle: "Your Reliable Hamburger Co-Worker"
+year: "2025"
+category: "AI / 3D"
+tags: ["AI Agent", "3D", "Simulation", "Game Design"]
+description: "An AI agent that navigates a 3D kitchen to assemble your perfect burger."
+coverImage: "/images/paprika-cover.png"
+
+featured: true
+order: 2
+github: "https://github.com/vanillaSky00/paprika"
+---
+import LinkCard from '../../components/LinkCard.astro';
+
+## About the Project
+
+Paprika is an autonomous agent capable of operating a 3D hamburger kitchen entirely through vision-based planning. While most game characters follow rigid scripts, Paprika "sees" the kitchen, interprets orders, and navigates complex culinary workflows in real time.
+
+
+## Built With & Powered By
+##### The World
+<LinkCard
+  url="https://github.com/KaganAyten/RestaurantGame3DUnity"
+  title="KaganAyten — RestaurantGame3DUnity"
+  description="Simple Hamburger making game like Overcooked in Unity3D"
+/>
+Paprika lives within the RestaurantGame3DUnity environment created by KaganAyten. We utilized this codebase for its robust 3D assets and core hamburger-making logic.
+
+
+##### The Intelligence (My Contribution): 
+<LinkCard
+  url="https://github.com/vanillaSky00/paprika"
+  title="vanillaSky00 — paprika"
+  description="Your Reliable Hamburger Workers"
+/>
+I transformed this manual "Overcooked-style" game into an AI research environment by implementing:
+- Vision-Based Planning: Replacing game-state data with visual input processing.
+- Autonomous Navigation: Enabling the agent to move between stations dynamically.
+- Reliable Decision Making: A custom logic layer that reads orders and prioritizes tasks based on the current kitchen state.
+
+
+## Motivation
+
+<LinkCard
+  url="https://www.youtube.com/watch?v=dhyhR4Bzc0I&t=10s"
+  title="Alex Rampell — Software is Eating Labor"
+  description="a16z General Partner on how AI will reshape medicine, law, and accounting."
+/>
+
+Back in 2025, a16z General Partner Alex Rampell talked about software eating labor markets — medicine, law, accounting. AI was going to change everything. But the more I thought about it, the more I felt like the conversation was missing something: reliability.
+
+Not "it worked three times in a row" reliable. Actually reliable — the kind where you stop thinking about whether it'll fail. So this project became a sandbox for exploring that question: how do you design an agent that humans can genuinely co-exist with? What does it even mean to build something trustworthy?
+
+## Architecture
+<LinkCard
+  url="https://voyager.minedojo.org/"
+  title="Voyager: An Open-Ended Embodied Agent with Large Language Models
+"
+  description="The first LLM-powered embodied lifelong learning agent in Minecraft that continuously explores the world."
+/>
+
+
+We built a small local agent system that receives data from a Unity game over WebSocket. The agent workflow is inspired by Voyager — four stages: curriculum, skill, act, and critic. It looks like a multi-agent setup on paper, but it's really a single agent moving through different state nodes.
+
+## Problems We're Working On
+
+**1. The agent ignores full tables**
+
+<LinkCard
+  url="https://say-can.github.io/"
+  title="Do As I Can, Not As I Say: Grounding Language in Robotic Affordances"
+  description="Robotics at Google"
+/>
+
+Even when our prompts explicitly say which tables are full, the agent still tries to place ingredients on them.
+
+We're working on this with context engineering. Reading the SayCan paper gave us the idea — they use RL to score tool selection, which made us realize we need to prune raw perception before it hits the model. So instead of dumping the full table state:
+```
+pt_1: full
+pt_2: full
+pt_3: empty
+pt_4: empty
+```
+We send something like:
+```
+You can place on pt_3 or pt_4 since they are empty.
+```
+**2. Ingredient imbalance**
+
+Even when we tell the agent to check ingredient counts, it still grabs the wrong things. Given something like:
+```
+bread: 1
+lettuce: 0
+cheese: 1
+meat: 3
+tomatoes: 0
+onion: 0
+```
+It should go for lettuce. It doesn't. So we're thinking about reframing — instead of raw counts, tell it directly:
+```
+lettuce is the ingredient you've processed least
+```
+Or go further and give it an explicit priority list, so it can plan ahead:
+```
+priority list for now:
+lettuce
+tomato
+onion
+bread
+cheese
+meat
+```
+The idea is to let it generate a longer sequence of planned actions rather than making greedy one-step decisions.
+
+**3. Moving rule-based logic out of prompts**
+
+Some things don't belong in a prompt. For example:
+if all ingredients — lettuce, tomato, onion, bread, cheese, meat — have at least one, make a hamburger.
+That's just a function:
+
+```python
+if all(count >= 1 for count in ingredients.values()):
+    CAN_MAKE_HAMBURGER = True
+
+if not IS_OTHER_EMERGENCIES and CAN_MAKE_HAMBURGER:
+    # TODO: design this so emergencies can interrupt and resume
+    make_hamburger()
+```
+
+The harder design question is how to handle interrupts — if an emergency happens mid-assembly, can it pause, deal with it, and come back? That's what we're still figuring out.
+
+**4. Function calling schema drift between Unity and Python**
+
+Right now both sides have to stay in sync on the schema. It's annoying to maintain. We're thinking about borrowing the "discover API" pattern — one side owns the schema, the other discovers it at runtime. Build the protocol first, let the schema live in one place.
+
+## What's Next
+
+- Let customers talk to the agent directly
+- Have the agent interact with customers (not just the kitchen)
+- Support different food orders, not just burgers
+- Add a cashier agent
