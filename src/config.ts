@@ -21,8 +21,8 @@ export const SITE_CONFIG = {
 
   // Social links
   SOCIAL: {
-    instagram: "https://instagram.com/",   
-    linkedin: "www.linkedin.com/in/kai-chun-su-5507b4307",  
+    instagram: "https://instagram.com/sukag1m_",   
+    linkedin: "https://www.linkedin.com/in/kai-chun-su-5507b4307",
     github: "https://github.com/vanillaSky00",         
   },
 
