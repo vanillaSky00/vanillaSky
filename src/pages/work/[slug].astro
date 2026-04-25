@@ -66,28 +66,8 @@ const next = allProjects[idx + 1] ?? null;
       )}
     </header>
 
-    <!-- ─── Cover Image ──────────────────────────────────── -->
-    <div class="project-cover">
-      {p.coverImage ? (
-        <img
-          src={url(p.coverImage)}
-          alt={`${p.title} cover`}
-          class="project-cover__img"
-        />
-      ) : (
-        <div class="project-cover__placeholder img-placeholder">
-          <span>{p.title}</span>
-        </div>
-      )}
-    </div>
-
-    <!-- ─── Article body ─────────────────────────────────── -->
-    <div class="project-body prose">
-      <Content />
-    </div>
-
-    <!-- ─── Videos ───────────────────────────────────────── -->
-    {p.videos && p.videos.length > 0 && (
+    <!-- ─── Cover: video(s) take precedence over image ──── -->
+    {p.videos && p.videos.length > 0 ? (
       <section class="project-videos" aria-label="Project videos">
         {p.videos.map((v) => (
           <figure class="project-video">
@@ -102,7 +82,26 @@ const next = allProjects[idx + 1] ?? null;
           </figure>
         ))}
       </section>
+    ) : (
+      <div class="project-cover">
+        {p.coverImage ? (
+          <img
+            src={url(p.coverImage)}
+            alt={`${p.title} cover`}
+            class="project-cover__img"
+          />
+        ) : (
+          <div class="project-cover__placeholder img-placeholder">
+            <span>{p.title}</span>
+          </div>
+        )}
+      </div>
     )}
+
+    <!-- ─── Article body ─────────────────────────────────── -->
+    <div class="project-body prose">
+      <Content />
+    </div>
 
     <!-- ─── Gallery ──────────────────────────────────────── -->
     {p.images && p.images.length > 0 && (
