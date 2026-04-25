@@ -1,0 +1,65 @@
+---
+import { url } from '../config';
+
+interface Props {
+  src: string;        // local path "/videos/foo.mp4" OR youtube URL/id
+  poster?: string;    // thumbnail for local videos
+  caption?: string;
+  ratio?: string;     // e.g. "16/9" (default), "4/3", "1/1"
+}
+
+const { src, poster, caption, ratio = '16/9' } = Astro.props;
+
+// Detect youtube
+let youtubeId: string | null = null;
+if (/youtu\.?be/.test(src)) {
+  const m = src.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+  youtubeId = m ? m[1] : null;
+}
+const isLocal = !youtubeId && !/^https?:\/\//.test(src);
+---
+
+<figure class="video-embed" style={`aspect-ratio:${ratio}`}>
+  {youtubeId ? (
+    <iframe
+      src={`https://www.youtube.com/embed/${youtubeId}`}
+      title={caption || 'video'}
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    ></iframe>
+  ) : (
+    <video
+      src={isLocal ? url(src) : src}
+      poster={poster ? url(poster) : undefined}
+      controls
+      preload="metadata"
+      playsinline
+    ></video>
+  )}
+  {caption && <figcaption class="video-embed__caption label">{caption}</figcaption>}
+</figure>
+
+<style>
+.video-embed {
+  margin: 1.8em 0;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--bg-secondary);
+  position: relative;
+}
+.video-embed video,
+.video-embed iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
+.video-embed__caption {
+  position: absolute;
+  bottom: -1.6rem;
+  left: 0;
+  font-size: 0.62rem;
+  color: var(--ink-faint);
+}
+</style>

@@ -86,6 +86,24 @@ const next = allProjects[idx + 1] ?? null;
       <Content />
     </div>
 
+    <!-- ─── Videos ───────────────────────────────────────── -->
+    {p.videos && p.videos.length > 0 && (
+      <section class="project-videos" aria-label="Project videos">
+        {p.videos.map((v) => (
+          <figure class="project-video">
+            <video
+              src={url(v.src)}
+              poster={v.poster ? url(v.poster) : undefined}
+              controls
+              preload="metadata"
+              playsinline
+            ></video>
+            {v.caption && <figcaption class="project-video__caption label">{v.caption}</figcaption>}
+          </figure>
+        ))}
+      </section>
+    )}
+
     <!-- ─── Gallery ──────────────────────────────────────── -->
     {p.images && p.images.length > 0 && (
       <section class="project-gallery" aria-label="Project images">
@@ -292,6 +310,30 @@ const next = allProjects[idx + 1] ?? null;
   border: none;
   border-top: 1px solid var(--border);
   margin-block: 2.5em;
+}
+
+/* Videos */
+.project-videos {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+.project-video {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--bg-secondary);
+}
+.project-video video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.project-video__caption {
+  margin-top: 0.5rem;
+  color: var(--ink-faint);
+  font-size: 0.65rem;
 }
 
 /* Gallery */

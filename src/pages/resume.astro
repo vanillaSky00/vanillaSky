@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_CONFIG, url } from '../config';
+
+const pdfPath = url('/Su_KaiChun_Resume.pdf');
+---
+
+<BaseLayout title="Résumé" description={`${SITE_CONFIG.TITLE} — résumé`}>
+
+  <div class="resume-page section container">
+
+    <header class="resume-header">
+      <a href={url('/about')} class="resume-back label">← Back</a>
+      <div class="resume-actions">
+        <a href={pdfPath} target="_blank" rel="noopener" class="resume-action label">Open in new tab ↗</a>
+        <a href={pdfPath} download class="resume-action resume-action--primary label">Download PDF ↓</a>
+      </div>
+    </header>
+
+    <object data={pdfPath} type="application/pdf" class="resume-viewer">
+      <p class="resume-fallback">
+        Your browser doesn't display PDFs inline.
+        <a href={pdfPath} target="_blank" rel="noopener">Open the résumé in a new tab</a>.
+      </p>
+    </object>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+.resume-page {
+  padding-top: calc(4rem + 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 100vh;
+}
+
+.resume-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.resume-back {
+  font-size: 0.72rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-muted);
+  transition: color 0.2s;
+}
+.resume-back:hover { color: var(--ink); }
+
+.resume-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.resume-action {
+  font-size: 0.7rem;
+  letter-spacing: 0.10em;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--ink);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.resume-action:hover {
+  border-color: var(--ink);
+}
+.resume-action--primary {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+.resume-action--primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.resume-viewer {
+  width: 100%;
+  height: calc(100vh - 12rem);
+  min-height: 600px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+}
+
+.resume-fallback {
+  padding: 2rem;
+  color: var(--ink-muted);
+  text-align: center;
+}
+.resume-fallback a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+</style>

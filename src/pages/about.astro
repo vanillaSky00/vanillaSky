@@ -43,27 +43,8 @@ import { SITE_CONFIG, url } from '../config';
         <p class="about-body">
           Outside of screens, figure skating is where I find the same tension
           between technical precision and expressive freedom that drives all
-          my work. Each project asks the same question: how much structure
-          before it stops breathing?
+          my work. 
         </p>
-
-        <!-- Expertise -->
-        <div class="about-expertise">
-          <p class="label about-expertise__title">Areas of Focus</p>
-          <div class="about-expertise__list">
-            {[
-              ['Software Architecture', 'AI agents, system design, cybersecurity'],
-              ['Web & App Design', 'React, Astro, full-stack development'],
-              ['Graphic Design', 'Poster design, identity, typography'],
-              ['Figure Skating', 'Performance, creative direction'],
-            ].map(([area, detail]) => (
-              <div class="about-expertise__item">
-                <span class="about-expertise__area label">{area}</span>
-                <span class="about-expertise__detail">{detail}</span>
-              </div>
-            ))}
-          </div>
-        </div>
 
         <!-- Contact CTA -->
         <div class="about-contact">
@@ -83,6 +64,32 @@ import { SITE_CONFIG, url } from '../config';
             <a href={SITE_CONFIG.SOCIAL.github} class="label" target="_blank" rel="noopener">
               GitHub
             </a>
+          </div>
+
+          <a href={url('/resume')} class="about-contact__resume label">
+            <span>View Résumé</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Expertise -->
+        <div class="about-expertise">
+          <p class="label about-expertise__title">Areas of Focus</p>
+          <div class="about-expertise__list">
+            {[
+              ['Software Architecture', 'AI agents, system design, cybersecurity'],
+              ['Web & App Design', 'React, Astro, full-stack development'],
+              ['Graphic Design', 'Poster design, identity, typography'],
+              ['Figure Skating', 'Performance, creative direction'],
+            ].map(([area, detail]) => (
+              <div class="about-expertise__item">
+                <span class="about-expertise__area label">{area}</span>
+                <span class="about-expertise__detail">{detail}</span>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -241,6 +248,25 @@ import { SITE_CONFIG, url } from '../config';
 .about-contact__socials a:hover { color: var(--ink); }
 
 .about-contact__sep { color: var(--ink-faint); }
+
+.about-contact__resume {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.10em;
+  color: var(--ink);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.about-contact__resume:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
 
 @media (max-width: 900px) {
   .about-grid {
