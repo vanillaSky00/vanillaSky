@@ -9,6 +9,12 @@ coverImage: "/images/graphdesign-cover.png"
 images:
   - "/images/graphdesign-01.png"
   - "/images/graphdesign-02.png"
+  - "/images/graphdesign-03.png"
+  - "/images/graphdesign-04.png"
+  - "/images/graphdesign-05.png"
+  - "/images/graphdesign-06.png"
+  - "/images/graphdesign-07.png"
+  - "/images/graphdesign-08.png"
 featured: false
 order: 5
 ---
