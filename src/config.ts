@@ -1,14 +1,9 @@
 // ============================================================
-// SITE CONFIG — single source of truth
-// Update these values before deploying to GitHub Pages
+// SITE CONFIG — single source of truth for content
+// Base path lives in astro.config.mjs (read via import.meta.env.BASE_URL).
 // ============================================================
 
 export const SITE_CONFIG = {
-  // Your GitHub Pages base URL. Examples:
-  //   "" for root domain (e.g. harrissu.com)
-  //   "/portfolio" for https://username.github.io/portfolio
-  BASE_URL: "http://vanillasky00.com/",
-
   // Site metadata
   TITLE: "Harris Su",
   TAGLINE: "Full-stack Developer / Designer",
@@ -34,9 +29,7 @@ export const SITE_CONFIG = {
   ],
 };
 
-// Helper: prepend Astro's base path to any internal path.
-// Reads from import.meta.env.BASE_URL, which Astro sets from astro.config.mjs `base`.
-// Works in both local dev (base = "/") and GitHub Pages subpath builds.
+// Prepend Astro's base path to an internal path.
 export function url(path: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   const p = path.startsWith("/") ? path : `/${path}`;

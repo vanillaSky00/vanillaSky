@@ -19,7 +19,7 @@ Static site built with **Astro 4 + React 18**, deployed to GitHub Pages via `.gi
 
 ### Content entry points (the only files that need editing for content changes)
 
-- [src/config.ts](src/config.ts) — site metadata, social links, nav items, and `BASE_URL`. Also exports a `url(path)` helper that prepends `BASE_URL` to any internal path. **Always use `url()`** for internal links to keep GitHub Pages subpath deploys working.
+- [src/config.ts](src/config.ts) — site metadata, social links, nav items. Also exports a `url(path)` helper that prepends the Astro base path to internal links. **Always use `url()`** for internal links so subpath deploys keep working.
 - [src/data/projects.ts](src/data/projects.ts) — the `PROJECTS` array drives everything: the homepage grid, individual project pages, and prev/next navigation. The `Project` interface defines all available fields. Images go in `public/images/`.
 
 ### Routing
@@ -39,6 +39,6 @@ All design tokens (colours, typography, spacing) are CSS custom properties defin
 
 ## GitHub Pages deployment
 
-- **Root domain deploy**: keep `BASE_URL: ""` in `src/config.ts` and `base: "/"` in `astro.config.mjs`.
-- **Subpath deploy** (e.g. `username.github.io/portfolio`): set `BASE_URL: "/portfolio"` in both `src/config.ts` and `base` in `astro.config.mjs`.
-- The `url()` helper in `src/config.ts` must be used for all internal hrefs so links resolve correctly in either mode.
+Base path lives in one place — [astro.config.mjs](astro.config.mjs) — and defaults to `"/"` for custom-domain / root deploys. For a subpath deploy, set the `SITE_BASE` env var at build time (e.g. `SITE_BASE=/portfolio npm run build`) instead of editing the file.
+
+The custom domain is pinned by [public/CNAME](public/CNAME), which Astro copies into `dist/` on every build so GitHub Pages preserves the domain setting. All internal hrefs must go through the `url()` helper in [src/config.ts](src/config.ts) so links resolve under any base path.
