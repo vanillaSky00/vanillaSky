@@ -4,10 +4,10 @@ subtitle: "Explore the different shades of the world"
 year: "2026"
 category: "Web Design"
 tags: ["React", "Web Design", "Frontend", "Gallery"]
-description: "An immersive gallery website celebrating figure skater Yuzuru Hanyu."
+description: "Exploring how far SDD prompt iteration can take a gallery website — without writing it by hand."
 coverImage: "/images/yuzuru-cover.png"
 featured: true
-order: 1
+order: 3
 link: "https://vanillasky00.github.io/yuzuru-hanyu-gallery/"
 github: "https://github.com/vanillaSky00/yuzuru-hanyu-gallery"
 ---

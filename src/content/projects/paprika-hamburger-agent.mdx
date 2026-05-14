@@ -11,7 +11,7 @@ videos:
     poster: "/thumbnails/paprika_thumbnail.png"
     caption: "Paprika — vision-based agent operating a 3D hamburger kitchen"
 featured: true
-order: 2
+order: 1
 github: "https://github.com/vanillaSky00/paprika"
 ---
 import LinkCard from '../../components/LinkCard.astro';
@@ -22,13 +22,18 @@ Paprika is an autonomous agent capable of operating a 3D hamburger kitchen entir
 
 
 ## Built With & Powered By
+
+Paprika lives within the RestaurantGame3DUnity environment created by KaganAyten. We utilized this codebase for its robust 3D assets and core hamburger-making logic.
+He made the cooking environment for single human player, we turned it into an human-agent playground with adding more UI and scripts for llm function callings. 
+
+
 ##### The World
 <LinkCard
   url="https://github.com/KaganAyten/RestaurantGame3DUnity"
   title="KaganAyten — RestaurantGame3DUnity"
   description="Simple Hamburger making game like Overcooked in Unity3D"
 />
-Paprika lives within the RestaurantGame3DUnity environment created by KaganAyten. We utilized this codebase for its robust 3D assets and core hamburger-making logic.
+
 
 
 ##### The Intelligence (My Contribution): 
@@ -54,6 +59,10 @@ I transformed this manual "Overcooked-style" game into an AI research environmen
 Back in 2025, a16z General Partner Alex Rampell talked about software eating labor markets — medicine, law, accounting. AI was going to change everything. But the more I thought about it, the more I felt like the conversation was missing something: reliability.
 
 Not "it worked three times in a row" reliable. Actually reliable — the kind where you stop thinking about whether it'll fail. So this project became a sandbox for exploring that question: how do you design an agent that humans can genuinely co-exist with? What does it even mean to build something trustworthy?
+
+Beyond co-exist, my friend Liang-Chun Li and I would like to explored new HCI (Human Computer Interaction). What it actually takes to get an LLM agent to co-work with a human that mimic real word cheif, with human fiddling with the food and things in kitchen in read-time, and the agent can react accordingly. 
+Even though we know LLMs are inherently slow, is there any applicable solution can be applied on agentic system that can create real-time illusion but also reliable: aligned with the chief/ rules in kitchen, and completing the work.
+
 
 ## Architecture
 <LinkCard

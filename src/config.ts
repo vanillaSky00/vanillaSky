@@ -7,7 +7,7 @@ export const SITE_CONFIG = {
   // Your GitHub Pages base URL. Examples:
   //   "" for root domain (e.g. harrissu.com)
   //   "/portfolio" for https://username.github.io/portfolio
-  BASE_URL: "https://vanillaSky00.github.io/vanillaSky",
+  BASE_URL: "http://vanillasky00.com/",
 
   // Site metadata
   TITLE: "Harris Su",
