@@ -1,4 +1,4 @@
-# Harris Su — Portfolio
+# vanillaSky00 — Portfolio
 
 A minimal showcase of selected work across software, design, and creative direction.
 

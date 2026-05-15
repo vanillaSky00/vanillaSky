@@ -5,14 +5,15 @@
 
 export const SITE_CONFIG = {
   // Site metadata
-  TITLE: "Harris Su",
+  TITLE: "vanillaSky00",
+  TAB_TITLE: "vanillaSky00",
   TAGLINE: "Full-stack Developer / Designer",
   DESCRIPTION: "Software architecture · Graphic design · Figure skating",
   EMAIL: "pipichun2@gmail.com",
 
   // Portrait image — put file in public/images/ and set the path here.
   // Set to "" to show the placeholder box instead.
-  PORTRAIT: "/images/harris-portrait.jpg",
+  PORTRAIT: "/images/vanillaSky00-portrait.jpg",
 
   // Social links
   SOCIAL: {
@@ -23,6 +24,7 @@ export const SITE_CONFIG = {
 
   // Navigation links
   NAV: [
+    { label: "Work", href: "/work" },
     { label: "About", href: "/about" },
     { label: "Writing", href: "/blog" },
     { label: "Contact", href: "/#contact" },

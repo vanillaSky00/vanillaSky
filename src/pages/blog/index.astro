@@ -2,18 +2,24 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { url } from '../../config';
+import {
+  formatReadingTime,
+  formatShortDate,
+  getPostUpdatedDate,
+  getReadingMinutes,
+} from '../../lib/blogMeta';
 
-const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const allPosts = await getCollection('blog', ({ data }) => !data.draft || import.meta.env.DEV);
 const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<BaseLayout title="Writing" description="Essays and notes by Harris Su.">
+<BaseLayout title="Writing" description="Essays and notes by vanillaSky00.">
 
   <div class="blog-index section container">
 
     <header class="blog-header stagger">
       <p class="label blog-header__eyebrow">Writing</p>
-      <h1 class="blog-header__title">Notes &amp; Essays</h1>
+      <h1 class="blog-header__title"></h1>
     </header>
 
     <div class="blog-list">
@@ -23,11 +29,11 @@ const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueO
           class="blog-row"
           style={`animation-delay: ${i * 0.06}s`}
         >
-          <span class="blog-row__date label">
-            {post.data.date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })}
+          <span class="blog-row__meta label">
+            <span>Updated {formatShortDate(getPostUpdatedDate(post))}</span>
+            <span>{formatReadingTime(getReadingMinutes(post.body))}</span>
           </span>
           <span class="blog-row__title">{post.data.title}</span>
-          <span class="blog-row__desc">{post.data.description}</span>
           <div class="blog-row__tags">
             {post.data.tags.map(tag => (
               <span class="blog-row__tag label">{tag}</span>
@@ -73,7 +79,7 @@ const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueO
 
 .blog-row {
   display: grid;
-  grid-template-columns: 140px 1fr 1fr auto auto;
+  grid-template-columns: 160px minmax(0, 1fr) auto auto;
   gap: 2rem;
   align-items: baseline;
   padding-block: 1.5rem;
@@ -83,21 +89,21 @@ const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueO
 }
 .blog-row:hover { opacity: 0.6; }
 
-.blog-row__date {
+.blog-row__meta {
   color: var(--ink-faint);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   font-size: 0.65rem;
+  line-height: 1.35;
 }
 
 .blog-row__title {
-  font-family: var(--font-display);
+  font-family: var(--font-brand);
   font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0;
   color: var(--ink);
-}
-
-.blog-row__desc {
-  color: var(--ink-muted);
-  font-size: 0.9rem;
-  line-height: 1.4;
 }
 
 .blog-row__tags {

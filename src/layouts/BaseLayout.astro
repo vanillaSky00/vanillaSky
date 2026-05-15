@@ -11,14 +11,14 @@ interface Props {
 }
 
 const {
-  title = SITE_CONFIG.TITLE,
+  title = SITE_CONFIG.TAB_TITLE,
   description = SITE_CONFIG.DESCRIPTION,
   image,
 } = Astro.props;
 
-const fullTitle = title === SITE_CONFIG.TITLE
+const fullTitle = title === SITE_CONFIG.TAB_TITLE
   ? title
-  : `${title} — ${SITE_CONFIG.TITLE}`;
+  : `${title} | ${SITE_CONFIG.TAB_TITLE}`;
 ---
 
 <!doctype html>
@@ -64,6 +64,40 @@ const fullTitle = title === SITE_CONFIG.TITLE
         }
       });
     });
+
+    // Inject copy buttons into rehype-pretty-code blocks (idempotent)
+    function attachCopyButtons() {
+      const figures = document.querySelectorAll<HTMLElement>('figure[data-rehype-pretty-code-figure]');
+      figures.forEach((figure) => {
+        if (figure.querySelector('.copy-btn')) return;
+        const pre = figure.querySelector('pre');
+        if (!pre) return;
+
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.type = 'button';
+        btn.textContent = 'Copy';
+        btn.setAttribute('aria-label', 'Copy code to clipboard');
+
+        btn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(pre.innerText);
+            btn.textContent = 'Copied';
+            btn.classList.add('copied');
+            window.setTimeout(() => {
+              btn.textContent = 'Copy';
+              btn.classList.remove('copied');
+            }, 1500);
+          } catch {
+            btn.textContent = 'Failed';
+            window.setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+          }
+        });
+
+        figure.appendChild(btn);
+      });
+    }
+    attachCopyButtons();
   </script>
 </body>
 </html>

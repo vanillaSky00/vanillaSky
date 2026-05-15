@@ -28,14 +28,10 @@ const next = allProjects[idx + 1] ?? null;
   <article class="project-page section container">
 
     <!-- ─── Back ─────────────────────────────────────────── -->
-    <a href={url('/')} class="project-back label">← All Work</a>
+    <a href={url('/work')} class="project-back label">← Work</a>
 
     <!-- ─── Header ──────────────────────────────────────── -->
     <header class="project-header stagger">
-      <div class="project-header__meta">
-        <span class="label project-header__category">{p.category}</span>
-        <span class="label project-header__year">{p.year}</span>
-      </div>
       <h1 class="project-header__title">
         {p.title}
         {p.subtitle && (
@@ -43,99 +39,142 @@ const next = allProjects[idx + 1] ?? null;
         )}
       </h1>
       <p class="project-header__desc">{p.description}</p>
-
-      <div class="project-header__tags">
-        {p.tags.map(tag => (
-          <span class="project-tag label">{tag}</span>
-        ))}
-      </div>
-
-      {(p.link || p.github) && (
-        <div class="project-header__links">
-          {p.link && (
-            <a href={p.link} class="project-link label" target="_blank" rel="noopener">
-              Live Project ↗
-            </a>
-          )}
-          {p.github && (
-            <a href={p.github} class="project-link label" target="_blank" rel="noopener">
-              GitHub ↗
-            </a>
-          )}
-        </div>
-      )}
     </header>
 
-    <!-- ─── Cover: video(s) take precedence over image ──── -->
-    {p.videos && p.videos.length > 0 ? (
-      <section class="project-videos" aria-label="Project videos">
-        {p.videos.map((v) => (
-          <figure class="project-video">
-            <video
-              src={url(v.src)}
-              poster={v.poster ? url(v.poster) : undefined}
-              controls
-              preload="metadata"
-              playsinline
-            ></video>
-            {v.caption && <figcaption class="project-video__caption label">{v.caption}</figcaption>}
-          </figure>
-        ))}
-      </section>
-    ) : (
-      <div class="project-cover">
-        {p.coverImage ? (
-          <img
-            src={url(p.coverImage)}
-            alt={`${p.title} cover`}
-            class="project-cover__img"
-          />
-        ) : (
-          <div class="project-cover__placeholder img-placeholder">
-            <span>{p.title}</span>
+    <div class="project-shell">
+      <aside class="project-sidebar" aria-label="Project details">
+        <div class="project-sidebar__section">
+          <p class="label project-sidebar__label">Project</p>
+          <dl class="project-sidebar__meta">
+            <div>
+              <dt class="label">Year</dt>
+              <dd>{p.year}</dd>
+            </div>
+            <div>
+              <dt class="label">Field</dt>
+              <dd>{p.category}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="project-sidebar__section">
+          <p class="label project-sidebar__label">Tags</p>
+          <div class="project-sidebar__tags">
+            {p.tags.map(tag => (
+              <span class="project-sidebar__tag label">{tag}</span>
+            ))}
+          </div>
+        </div>
+
+        {(p.link || p.github) && (
+          <div class="project-sidebar__section">
+            <p class="label project-sidebar__label">Links</p>
+            <div class="project-sidebar__links">
+              {p.link && (
+                <a href={p.link} class="project-sidebar__link label" target="_blank" rel="noopener">
+                  Live Project ↗
+                </a>
+              )}
+              {p.github && (
+                <a href={p.github} class="project-sidebar__link label" target="_blank" rel="noopener">
+                  GitHub ↗
+                </a>
+              )}
+            </div>
           </div>
         )}
-      </div>
-    )}
 
-    <!-- ─── Article body ─────────────────────────────────── -->
-    <div class="project-body prose">
-      <Content />
-    </div>
+        <nav class="project-sidebar__section" aria-label="Project list">
+          <p class="label project-sidebar__label">More Work</p>
+          <div class="project-sidebar__projects">
+            {allProjects.map(item => (
+              item.slug === slug ? (
+                <span class="project-sidebar__project is-current" aria-current="page">
+                  {item.data.title}
+                </span>
+              ) : (
+                <a href={url(`/work/${item.slug}`)} class="project-sidebar__project">
+                  {item.data.title}
+                </a>
+              )
+            ))}
+          </div>
+        </nav>
+      </aside>
 
-    <!-- ─── Gallery ──────────────────────────────────────── -->
-    {p.images && p.images.length > 0 && (
-      <section class="project-gallery" aria-label="Project images">
-        {p.images.map((img, i) => (
-          <div class="project-gallery__item">
-            {img ? (
-              <img src={url(img)} alt={`${p.title} image ${i + 1}`} loading="lazy" />
+      <div class="project-main">
+        <!-- ─── Cover: video(s) take precedence over image ──── -->
+        {p.videos && p.videos.length > 0 ? (
+          <section class="project-videos" aria-label="Project videos">
+            {p.videos.map((v) => (
+              <figure class="project-video">
+                <video
+                  src={url(v.src)}
+                  poster={v.poster ? url(v.poster) : undefined}
+                  controls
+                  preload="metadata"
+                  playsinline
+                ></video>
+                {v.caption && <figcaption class="project-video__caption label">{v.caption}</figcaption>}
+              </figure>
+            ))}
+          </section>
+        ) : (
+          <div class="project-cover">
+            {p.coverImage ? (
+              <img
+                src={url(p.coverImage)}
+                alt={`${p.title} cover`}
+                class="project-cover__img"
+              />
             ) : (
-              <div class="img-placeholder" style="aspect-ratio:16/9">
-                <span>Image {i + 1}</span>
+              <div class="project-cover__placeholder img-placeholder">
+                <span>{p.title}</span>
               </div>
             )}
           </div>
-        ))}
-      </section>
-    )}
+        )}
 
-    <!-- ─── Navigation ───────────────────────────────────── -->
-    <nav class="project-nav" aria-label="Project navigation">
-      {prev ? (
-        <a href={url(`/work/${prev.slug}`)} class="project-nav__item project-nav__item--prev">
-          <span class="label project-nav__direction">← Previous</span>
-          <span class="project-nav__name">{prev.data.title}</span>
-        </a>
-      ) : <span />}
+        <!-- ─── Article body ─────────────────────────────────── -->
+        <div class="project-body prose">
+          <Content />
+        </div>
 
-      {next ? (
-        <a href={url(`/work/${next.slug}`)} class="project-nav__item project-nav__item--next">
-          <span class="label project-nav__direction">Next →</span>
-          <span class="project-nav__name">{next.data.title}</span>
-        </a>
-      ) : <span />}
-    </nav>
+        <!-- ─── Gallery ──────────────────────────────────────── -->
+        {p.images && p.images.length > 0 && (
+          <section class="project-gallery" aria-label="Project images">
+            {p.images.map((img, i) => (
+              <div class="project-gallery__item">
+                {img ? (
+                  <img src={url(img)} alt={`${p.title} image ${i + 1}`} loading="lazy" />
+                ) : (
+                  <div class="img-placeholder" style="aspect-ratio:16/9">
+                    <span>Image {i + 1}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </section>
+        )}
+
+        <!-- ─── Navigation ───────────────────────────────────── -->
+        <nav class="project-nav" aria-label="Project navigation">
+          {prev ? (
+            <a href={url(`/work/${prev.slug}`)} class="project-nav__item project-nav__item--prev">
+              <span class="label project-nav__direction">← Previous</span>
+              <span class="project-nav__name">{prev.data.title}</span>
+            </a>
+          ) : <span />}
+
+          {next ? (
+            <a href={url(`/work/${next.slug}`)} class="project-nav__item project-nav__item--next">
+              <span class="label project-nav__direction">Next →</span>
+              <span class="project-nav__name">{next.data.title}</span>
+            </a>
+          ) : <span />}
+        </nav>
+      </div>
+    </div>
 
   </article>
 
@@ -143,8 +182,10 @@ const next = allProjects[idx + 1] ?? null;
 
 <style>
 .project-page {
+  --blog-body-font: Inter, Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --blog-heading-font: var(--font-code);
   padding-top: calc(4rem + 3rem);
-  max-width: 860px;
+  max-width: 1120px;
 }
 
 .project-back {
@@ -161,27 +202,13 @@ const next = allProjects[idx + 1] ?? null;
   margin-bottom: 3rem;
 }
 
-.project-header__meta {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.project-header__category {
-  color: var(--accent);
-  font-size: 0.68rem;
-}
-
-.project-header__year {
-  color: var(--ink-faint);
-  font-size: 0.68rem;
-}
-
 .project-header__title {
-  font-size: clamp(2.5rem, 5vw, 5rem);
-  letter-spacing: -0.03em;
+  font-family: var(--blog-heading-font);
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: 0;
   margin-bottom: 1.5rem;
-  line-height: 1.05;
+  line-height: 1.2;
 }
 
 .project-header__subtitle {
@@ -190,41 +217,107 @@ const next = allProjects[idx + 1] ?? null;
 }
 
 .project-header__desc {
+  font-family: var(--blog-body-font);
   color: var(--ink-muted);
   font-size: 1.05rem;
-  line-height: 1.75;
+  line-height: 1.65;
   max-width: 60ch;
-  margin-bottom: 1.5rem;
 }
 
-.project-header__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 1.5rem;
+.project-shell {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
 }
 
-.project-tag {
-  font-size: 0.62rem;
-  letter-spacing: 0.10em;
+.project-main {
+  min-width: 0;
+}
+
+.project-sidebar {
+  position: sticky;
+  top: 6rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.2rem;
+  font-family: var(--blog-body-font);
+}
+
+.project-sidebar__section {
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.project-sidebar__section:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.project-sidebar__label {
   color: var(--ink-faint);
+  font-size: 0.62rem;
+  margin-bottom: 1rem;
+}
+
+.project-sidebar__meta {
+  display: grid;
+  gap: 1rem;
+}
+
+.project-sidebar__meta div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.project-sidebar__meta dt {
+  color: var(--ink-faint);
+  font-size: 0.58rem;
+}
+
+.project-sidebar__meta dd {
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.project-sidebar__tags,
+.project-sidebar__links,
+.project-sidebar__projects {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.project-sidebar__tag {
+  width: fit-content;
+  color: var(--ink-faint);
+  font-size: 0.6rem;
+  letter-spacing: 0.10em;
   border: 1px solid var(--border-strong);
   padding: 0.15rem 0.5rem;
   border-radius: 2px;
 }
 
-.project-header__links {
-  display: flex;
-  gap: 2rem;
-}
-
-.project-link {
-  font-size: 0.72rem;
-  letter-spacing: 0.10em;
+.project-sidebar__link {
   color: var(--accent);
+  font-size: 0.68rem;
+  letter-spacing: 0.10em;
   transition: opacity 0.2s;
 }
-.project-link:hover { opacity: 0.6; }
+.project-sidebar__link:hover { opacity: 0.6; }
+
+.project-sidebar__project {
+  font-family: var(--blog-heading-font);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--ink-muted);
+  transition: color 0.2s, opacity 0.2s;
+}
+.project-sidebar__project:hover { color: var(--ink); }
+.project-sidebar__project.is-current { color: var(--accent); }
 
 /* Cover */
 .project-cover {
@@ -249,27 +342,41 @@ const next = allProjects[idx + 1] ?? null;
 }
 
 .prose {
+  font-family: var(--blog-body-font);
   color: var(--ink);
-  font-size: 1.7rem;
-  line-height: 1.8;
+  font-size: 1.0625rem;
+  line-height: 1.78;
+  letter-spacing: 0;
   max-width: 65ch;
   border-top: 1px solid var(--border);
   padding-top: 2.5rem;
 }
 
-.prose :global(p) { margin-bottom: 1.4em; }
-.prose :global(h2) {
-  font-family: var(--font-display);
-  font-size: 1.8rem;
+.prose :global(p) { margin-bottom: 1.35em; }
+
+.prose :global(h1),
+.prose :global(h2),
+.prose :global(h3) {
+  font-family: var(--blog-heading-font);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.25;
   color: var(--ink);
-  letter-spacing: -0.02em;
+}
+
+.prose :global(h1) {
+  font-size: 2.125rem;
+  margin-top: 0;
+  margin-bottom: 0.8em;
+}
+
+.prose :global(h2) {
+  font-size: 1.625rem;
   margin-top: 2.5em;
   margin-bottom: 0.7em;
 }
 .prose :global(h3) {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  color: var(--ink);
+  font-size: 1.25rem;
   margin-top: 2em;
   margin-bottom: 0.5em;
 }
@@ -290,21 +397,20 @@ const next = allProjects[idx + 1] ?? null;
   font-style: italic;
   margin-block: 1.5em;
 }
-.prose :global(code) {
-  font-family: var(--font-mono);
-  font-size: 0.88em;
+/* Inline code (block code is styled globally in global.css) */
+.prose :global(:not(pre) > code) {
+  font-family: var(--font-code);
+  font-size: 0.92em;
   background: var(--bg-secondary);
   padding: 0.1em 0.35em;
   border-radius: 3px;
+  border: 1px solid var(--border);
 }
-.prose :global(pre) {
-  background: var(--bg-secondary);
-  padding: 1.2rem 1.5rem;
-  border-radius: 4px;
-  overflow-x: auto;
+.prose :global(img) {
+  width: 100%;
+  border-radius: 2px;
   margin-block: 1.5em;
 }
-.prose :global(pre code) { background: none; padding: 0; }
 .prose :global(hr) {
   border: none;
   border-top: 1px solid var(--border);
@@ -380,11 +486,46 @@ const next = allProjects[idx + 1] ?? null;
 }
 
 .project-nav__name {
-  font-family: var(--font-display);
+  font-family: var(--blog-heading-font);
   font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.35;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
+  .project-shell {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .project-sidebar {
+    position: static;
+  }
+
+  .project-sidebar__tags,
+  .project-sidebar__links,
+  .project-sidebar__projects {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .project-header__title {
+    font-size: 2rem;
+  }
+
+  .prose {
+    font-size: 1rem;
+  }
+
+  .prose :global(h1) {
+    font-size: 2rem;
+  }
+
+  .prose :global(h2) {
+    font-size: 1.5rem;
+  }
+
   .project-gallery { grid-template-columns: 1fr; }
 }
 </style>

@@ -88,20 +88,20 @@ We built a small local agent system that receives data from a Unity game over We
 Even when our prompts explicitly say which tables are full, the agent still tries to place ingredients on them.
 
 We're working on this with context engineering. Reading the SayCan paper gave us the idea — they use RL to score tool selection, which made us realize we need to prune raw perception before it hits the model. So instead of dumping the full table state:
-```
+```text title="kitchen state — raw"
 pt_1: full
 pt_2: full
 pt_3: empty
 pt_4: empty
 ```
 We send something like:
-```
+```text title="kitchen state — pruned"
 You can place on pt_3 or pt_4 since they are empty.
 ```
 **2. Ingredient imbalance**
 
 Even when we tell the agent to check ingredient counts, it still grabs the wrong things. Given something like:
-```
+```yaml title="ingredient counts"
 bread: 1
 lettuce: 0
 cheese: 1
@@ -110,12 +110,11 @@ tomatoes: 0
 onion: 0
 ```
 It should go for lettuce. It doesn't. So we're thinking about reframing — instead of raw counts, tell it directly:
-```
+```text
 lettuce is the ingredient you've processed least
 ```
 Or go further and give it an explicit priority list, so it can plan ahead:
-```
-priority list for now:
+```text title="priority list"
 lettuce
 tomato
 onion
@@ -131,7 +130,7 @@ Some things don't belong in a prompt. For example:
 if all ingredients — lettuce, tomato, onion, bread, cheese, meat — have at least one, make a hamburger.
 That's just a function:
 
-```python
+```python title="hamburger.py"
 if all(count >= 1 for count in ingredients.values()):
     CAN_MAKE_HAMBURGER = True
 

@@ -1,9 +1,9 @@
 ---
-title: "Hello, World"
+title: "Deep dive into SFT"
 date: 2026-04-08
-description: "A first post — on why I decided to start writing."
-tags: ["meta", "design"]
-draft: false
+description: "Supervised fine-tuning"
+tags: ["LLM", "Fine-tuning", "SFT"]
+draft: true
 ---
 
 Every portfolio needs a first post that explains itself.

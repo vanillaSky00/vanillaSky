@@ -1,10 +1,10 @@
 /* ============================================================
-   GLOBAL STYLES — Harris Su Portfolio
+   GLOBAL STYLES — vanillaSky00 Portfolio
    Palette: Warm off-white / deep ink + amber/terracotta accent
-   Fonts: DM Serif Display (headings) + DM Mono (labels/nav)
+   Fonts: DM Serif Display (headings) + Poppins (brand) + DM Mono (labels/nav)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Fira+Code:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Poppins:wght@500;600&display=swap');
 
 /* ─── Design Tokens ─────────────────────────────────────── */
 :root {
@@ -24,7 +24,10 @@
   /* Typography scale */
   --font-display: 'DM Serif Display', Georgia, serif;
   --font-body:    'Cormorant Garamond', Georgia, serif;
+  --font-brand:   'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono:    'DM Mono', 'Courier New', monospace;
+  --font-article: 'Fira Code', 'Fira Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  --font-code:    'JetBrains Mono', 'DM Mono', 'Courier New', monospace;
 
   /* Spacing */
   --max-w: 1200px;
@@ -146,4 +149,110 @@ h1, h2, h3, h4 {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.1em;
+}
+
+/* ─── Code block widget (rehype-pretty-code) ─────────────
+   Targets rehype-pretty-code's `data-rehype-pretty-code-*`
+   attributes — global because they only appear inside code
+   blocks. All colors come from design tokens above. */
+figure[data-rehype-pretty-code-figure] {
+  position: relative;
+  margin-block: 1.8em;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+
+figure[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  padding: 0.7rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+figure[data-rehype-pretty-code-figure] pre {
+  background: transparent;
+  margin: 0;
+  padding: 1.1rem 1.3rem;
+  overflow-x: auto;
+  font-family: var(--font-code);
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+
+figure[data-rehype-pretty-code-figure] pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  display: grid;
+}
+
+figure[data-rehype-pretty-code-figure] [data-line] {
+  padding-inline: 0.1rem;
+}
+
+/* Map Shiki dual-theme CSS variables to our data-theme attribute */
+figure[data-rehype-pretty-code-figure] code,
+figure[data-rehype-pretty-code-figure] code span {
+  color: var(--shiki-light);
+}
+html[data-theme='dark'] figure[data-rehype-pretty-code-figure] code,
+html[data-theme='dark'] figure[data-rehype-pretty-code-figure] code span {
+  color: var(--shiki-dark);
+}
+
+/* Copy button (injected by BaseLayout script) */
+.copy-btn {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.3rem 0.55rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease), color 0.2s, border-color 0.2s;
+}
+figure[data-rehype-pretty-code-figure]:hover .copy-btn,
+figure[data-rehype-pretty-code-figure]:focus-within .copy-btn,
+.copy-btn:focus-visible {
+  opacity: 1;
+}
+.copy-btn:hover {
+  color: var(--ink);
+  border-color: var(--border-strong);
+}
+.copy-btn.copied {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ─── MathJax output (remark-math + rehype-mathjax) ────── */
+mjx-container.MathJax {
+  color: var(--ink);
+  font-size: 1em;
+}
+
+mjx-container.MathJax[display="true"] {
+  margin-block: 1.6em;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.2rem;
+}
+
+mjx-container.MathJax svg {
+  display: inline-block;
 }

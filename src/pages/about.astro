@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_CONFIG, url } from '../config';
 ---
 
-<BaseLayout title="About" description="Harris Su — software designer from Taipei, studying at NCKU.">
+<BaseLayout title="About" description="vanillaSky00 — software designer from Taipei, studying at NCKU.">
 
   <div class="about-page section container">
 
@@ -12,7 +12,7 @@ import { SITE_CONFIG, url } from '../config';
       <p class="label about-header__eyebrow">About</p>
       <h1 class="about-header__title">
         Hi, I'm<br/>
-        <em>Harris Su.</em>
+        <em>vanillaSky00.</em>
       </h1>
     </header>
 
@@ -28,11 +28,6 @@ import { SITE_CONFIG, url } from '../config';
       </aside>
 
       <div class="about-content stagger">
-
-        <p class="about-lead">
-          A software designer from Taipei currently studying at
-          National Cheng Kung University.
-        </p>
 
         <p class="about-body">
           My world exists at the intersection of rigid logic and fluid motion.
@@ -168,8 +163,9 @@ import { SITE_CONFIG, url } from '../config';
 
 .about-body {
   color: var(--ink-muted);
-  font-size: 1.05rem;
-  line-height: 1.75;
+  font-size: 1.5625rem;
+  line-height: 1.78;
+  letter-spacing: 0;
   max-width: 52ch;
 }
 
@@ -207,7 +203,9 @@ import { SITE_CONFIG, url } from '../config';
 }
 
 .about-expertise__detail {
-  font-size: 0.9rem;
+  font-size: 1.0625rem;
+  line-height: 1.78;
+  letter-spacing: 0;
   color: var(--ink-muted);
 }
 

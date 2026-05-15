@@ -36,8 +36,9 @@ import { SITE_CONFIG, url } from '../config';
 
     <div class="footer__col footer__col--nav">
       <p class="label footer__section-label">Navigation</p>
-      <a href={url('/')} class="footer__nav-link label">Work</a>
+      <a href={url('/work')} class="footer__nav-link label">Work</a>
       <a href={url('/about')} class="footer__nav-link label">About</a>
+      <a href={url('/blog')} class="footer__nav-link label">Writing</a>
     </div>
 
   </div>
@@ -64,8 +65,10 @@ import { SITE_CONFIG, url } from '../config';
 }
 
 .footer__name {
-  font-family: var(--font-display);
+  font-family: var(--font-brand);
   font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0;
   margin-bottom: 0.4rem;
 }
 

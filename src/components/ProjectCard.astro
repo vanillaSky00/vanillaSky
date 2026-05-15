@@ -121,8 +121,10 @@ const p = project.data;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
   gap: 0.8rem;
   border-left: 1px solid var(--border);
+  text-align: left;
 }
 
 .project-card__meta {
@@ -145,11 +147,15 @@ const p = project.data;
   font-size: clamp(1.3rem, 2.5vw, 1.9rem);
   letter-spacing: -0.02em;
   line-height: 1.15;
+  text-align: left;
 }
 
 .project-card__subtitle {
+  display: block;
   font-style: italic;
   opacity: 0.6;
+  text-align: left;
+  margin-top: 0.25rem;
 }
 
 .project-card__desc {
@@ -162,8 +168,10 @@ const p = project.data;
 .project-card__tags {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 0.4rem;
   margin-top: 0.4rem;
+  text-align: left;
 }
 
 .project-card__tag {

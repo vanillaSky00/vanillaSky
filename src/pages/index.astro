@@ -1,21 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import { SITE_CONFIG, url } from '../config';
-import { getCollection } from 'astro:content';
-
-// Sort: featured first, then by order field
-const allProjects = await getCollection('projects');
-const ordered = allProjects.sort((a, b) => {
-  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
-  return (a.data.order ?? 99) - (b.data.order ?? 99);
-});
-
-// Latest 3 blog posts
-const allPosts = await getCollection('blog', ({ data }) => !data.draft);
-const posts = allPosts
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
 ---
 
 <BaseLayout>
@@ -52,56 +37,13 @@ const posts = allPosts
     </div>
   </section>
 
-  <!-- ─── Divider ───────────────────────────────────────── -->
-  <div class="divider container">
-    <span class="label divider__label">Selected Work</span>
-    <div class="divider__line"></div>
-    <span class="label divider__count">{ordered.length} project{ordered.length !== 1 ? 's' : ''}</span>
-  </div>
-
-  <!-- ─── Project List ─────────────────────────────────── -->
-  <section class="projects section" aria-label="Projects">
-    {ordered.map((project, i) => (
-      <ProjectCard project={project} index={i} />
-    ))}
-  </section>
-
-  <!-- ─── Writing Divider ──────────────────────────────── -->
-  {posts.length > 0 && (
-    <div class="divider container">
-      <span class="label divider__label">Writing</span>
-      <div class="divider__line"></div>
-      <a href={url('/blog')} class="label divider__count divider__all">All posts →</a>
-    </div>
-  )}
-
-  <!-- ─── Blog Preview ─────────────────────────────────── -->
-  {posts.length > 0 && (
-    <section class="blog-preview section container" aria-label="Recent writing">
-      {posts.map((post, i) => (
-        <a
-          href={url(`/blog/${post.slug}`)}
-          class="blog-row"
-          style={`animation-delay: ${i * 0.08}s`}
-        >
-          <span class="blog-row__date label">
-            {post.data.date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })}
-          </span>
-          <span class="blog-row__title">{post.data.title}</span>
-          <span class="blog-row__desc">{post.data.description}</span>
-          <span class="blog-row__arrow label">→</span>
-        </a>
-      ))}
-    </section>
-  )}
-
   <!-- ─── About Strip ──────────────────────────────────── -->
   <section class="about-strip container" id="about-preview">
     <div class="about-strip__inner">
       <div class="about-strip__text">
         <p class="label about-strip__eyebrow">About</p>
         <p class="about-strip__body">
-          Hi, my name is Harris Su, a software designer from Taipei
+          Hi, my name is vanillaSky00, a software designer from Taipei
           currently studying at National Cheng Kung University.
           By day, I engineer AI agents and tackle cybersecurity.
           By design, I craft intuitive apps and artistic graphics.
@@ -193,77 +135,6 @@ const posts = allPosts
   animation: fadeUp 1s 0.8s var(--ease) both;
 }
 
-/* ─── Divider ───────────────────────────────────────────── */
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 0;
-}
-
-.divider__label, .divider__count {
-  white-space: nowrap;
-  color: var(--ink-faint);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-}
-
-.divider__all {
-  color: var(--accent);
-  transition: opacity 0.2s;
-}
-.divider__all:hover { opacity: 0.6; }
-
-.divider__line {
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-/* ─── Projects ──────────────────────────────────────────── */
-.projects { padding-top: 2rem; }
-
-/* ─── Blog Preview ──────────────────────────────────────── */
-.blog-preview {
-  padding-top: 2rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.blog-row {
-  display: grid;
-  grid-template-columns: 120px 1fr 1fr auto;
-  gap: 2rem;
-  align-items: baseline;
-  padding-block: 1.4rem;
-  border-bottom: 1px solid var(--border);
-  transition: opacity 0.2s;
-  animation: fadeUp 0.6s var(--ease) both;
-}
-.blog-row:hover { opacity: 0.6; }
-
-.blog-row__date {
-  color: var(--ink-faint);
-  font-size: 0.65rem;
-}
-
-.blog-row__title {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: var(--ink);
-}
-
-.blog-row__desc {
-  color: var(--ink-muted);
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.blog-row__arrow {
-  color: var(--accent);
-  font-size: 0.8rem;
-}
-
 /* ─── About Strip ───────────────────────────────────────── */
 .about-strip {
   padding-block: var(--section-gap);
@@ -331,10 +202,5 @@ const posts = allPosts
   .about-strip__portrait {
     aspect-ratio: 16/9;
   }
-  .blog-row {
-    grid-template-columns: 1fr;
-    gap: 0.4rem;
-  }
-  .blog-row__arrow { display: none; }
 }
 </style>
