@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_CONFIG, url } from '../config';
+import SocialIcon from '../components/SocialIcon.astro';
 ---
 
 <BaseLayout title="About" description="vanillaSky00 — software designer from Taipei, studying at NCKU.">
@@ -48,15 +49,13 @@ import { SITE_CONFIG, url } from '../config';
             {SITE_CONFIG.EMAIL}
           </a>
           <div class="about-contact__socials">
-            <a href={SITE_CONFIG.SOCIAL.instagram} class="label" target="_blank" rel="noopener">
-              Instagram
-            </a>
-            <span class="about-contact__sep" aria-hidden="true">·</span>
-            <a href={SITE_CONFIG.SOCIAL.linkedin} class="label" target="_blank" rel="noopener">
+            <a href={SITE_CONFIG.SOCIAL.linkedin} class="about-contact__social label" target="_blank" rel="noopener">
+              <SocialIcon name="linkedin" />
               LinkedIn
             </a>
             <span class="about-contact__sep" aria-hidden="true">·</span>
-            <a href={SITE_CONFIG.SOCIAL.github} class="label" target="_blank" rel="noopener">
+            <a href={SITE_CONFIG.SOCIAL.github} class="about-contact__social label" target="_blank" rel="noopener">
+              <SocialIcon name="github" />
               GitHub
             </a>
           </div>
@@ -238,6 +237,9 @@ import { SITE_CONFIG, url } from '../config';
 }
 
 .about-contact__socials a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.72rem;
   letter-spacing: 0.10em;
   color: var(--ink-muted);

@@ -1,5 +1,6 @@
 ---
 import { SITE_CONFIG, url } from '../config';
+import SocialIcon from './SocialIcon.astro';
 ---
 
 <footer class="footer" id="contact">
@@ -16,18 +17,15 @@ import { SITE_CONFIG, url } from '../config';
         {SITE_CONFIG.EMAIL}
       </a>
       <div class="footer__socials">
-        {SITE_CONFIG.SOCIAL.instagram && (
-          <a href={SITE_CONFIG.SOCIAL.instagram} class="footer__social label" target="_blank" rel="noopener">
-            Instagram
-          </a>
-        )}
         {SITE_CONFIG.SOCIAL.linkedin && (
           <a href={SITE_CONFIG.SOCIAL.linkedin} class="footer__social label" target="_blank" rel="noopener">
+            <SocialIcon name="linkedin" />
             LinkedIn
           </a>
         )}
         {SITE_CONFIG.SOCIAL.github && (
           <a href={SITE_CONFIG.SOCIAL.github} class="footer__social label" target="_blank" rel="noopener">
+            <SocialIcon name="github" />
             GitHub
           </a>
         )}
@@ -98,6 +96,9 @@ import { SITE_CONFIG, url } from '../config';
 }
 
 .footer__social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   font-size: 0.72rem;
   color: var(--ink-muted);
   transition: color 0.2s;
