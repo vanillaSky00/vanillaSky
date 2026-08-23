@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
+import { url } from '../../config';
 
 const projects = (await getCollection('projects', ({ data }) => data.featured))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
@@ -11,8 +12,20 @@ const projects = (await getCollection('projects', ({ data }) => data.featured))
 
   <div class="work-index section container">
     <header class="work-header stagger">
-      <p class="label work-header__eyebrow">Work</p>
-      <h1 class="work-header__title">Selected Projects</h1>
+      <video
+        class="work-header__media"
+        data-light-src={url('/videos/work-light-banner_2400x600.webm')}
+        data-dark-src={url('/videos/work-dark-banner_2400x600.webm')}
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-label="Selected projects reel"
+      ></video>
+      <p class="work-header__description">
+        This page shares a selection of my side projects and professional work.
+      </p>
     </header>
 
     <section class="work-list" aria-label="Projects">
@@ -24,28 +37,60 @@ const projects = (await getCollection('projects', ({ data }) => data.featured))
 
 </BaseLayout>
 
+<script>
+  const reel = document.querySelector<HTMLVideoElement>('.work-header__media');
+
+  if (reel) {
+    const syncReel = () => {
+      const theme = document.documentElement.getAttribute('data-theme');
+      const nextSrc = theme === 'dark' ? reel.dataset.darkSrc : reel.dataset.lightSrc;
+      if (!nextSrc || reel.getAttribute('src') === nextSrc) return;
+      reel.src = nextSrc;
+      reel.load();
+      reel.play().catch(() => {});
+    };
+
+    syncReel();
+    new MutationObserver(syncReel).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+  }
+</script>
+
 <style>
 .work-index {
-  padding-top: calc(4rem + var(--section-gap));
+  padding-top: calc(4rem + 1.5rem);
 }
 
 .work-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
   margin-bottom: 4rem;
 }
 
-.work-header__eyebrow {
-  color: var(--ink-faint);
-  margin-bottom: 1rem;
+.work-header__description {
+  color: var(--ink-muted);
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
-.work-header__title {
-  font-size: clamp(3rem, 6vw, 7rem);
-  letter-spacing: -0.04em;
-  line-height: 1.0;
+.work-header__media {
+  width: 100%;
+  aspect-ratio: 4 / 1;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  object-fit: cover;
 }
 
 .work-list {
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 700px) {
+  .work-header__media { aspect-ratio: 3 / 1; }
 }
 </style>
