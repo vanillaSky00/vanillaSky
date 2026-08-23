@@ -61,7 +61,6 @@ const p = project.data;
 <style>
 .project-card {
   animation: fadeUp 0.6s var(--ease) both;
-  border-bottom: 1px solid var(--border);
 }
 
 .project-card__link {
@@ -84,6 +83,12 @@ const p = project.data;
   position: relative;
   overflow: hidden;
   aspect-ratio: 4/3;
+  border-radius: 12px;
+  clip-path: inset(0 round 12px);
+}
+
+.project-card__media > * {
+  border-radius: inherit;
 }
 
 .project-card__img {
@@ -123,7 +128,6 @@ const p = project.data;
   justify-content: center;
   align-items: flex-start;
   gap: 0.8rem;
-  border-left: 1px solid var(--border);
   text-align: left;
 }
 
@@ -195,8 +199,6 @@ const p = project.data;
 }
 .project-card:nth-child(even) .project-card__body {
   direction: ltr;
-  border-left: none;
-  border-right: 1px solid var(--border);
 }
 .project-card:nth-child(even) .project-card__media {
   direction: ltr;
@@ -210,8 +212,6 @@ const p = project.data;
   }
   .project-card__body,
   .project-card:nth-child(even) .project-card__body {
-    border: none;
-    border-top: 1px solid var(--border);
     padding: 1.5rem;
   }
   .project-card__media { aspect-ratio: 16/9; }
