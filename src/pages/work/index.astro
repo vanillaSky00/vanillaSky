@@ -3,11 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
 
-const allProjects = await getCollection('projects');
-const projects = allProjects.sort((a, b) => {
-  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
-  return (a.data.order ?? 99) - (b.data.order ?? 99);
-});
+const projects = (await getCollection('projects', ({ data }) => data.featured))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 ---
 
 <BaseLayout title="Work" description="Selected projects by vanillaSky00.">

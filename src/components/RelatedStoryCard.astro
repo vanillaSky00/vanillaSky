@@ -1,0 +1,86 @@
+---
+import { url } from '../config';
+
+interface Story {
+  kind: 'project' | 'writing';
+  href: string;
+  title: string;
+  description: string;
+  previewImage?: string;
+}
+
+interface Props {
+  story: Story;
+}
+
+const { story } = Astro.props;
+---
+
+<a
+  href={url(story.href)}
+  class:list={['related-card', { 'is-text-only': !story.previewImage }]}
+>
+  {story.previewImage && (
+    <div class="related-card__media">
+      <img src={url(story.previewImage)} alt="" loading="lazy" />
+    </div>
+  )}
+  <div class="related-card__body">
+    <span class="related-card__kind label">
+      {story.kind === 'project' ? 'Work' : 'Writing'}
+    </span>
+    <h3>{story.title}</h3>
+    <p>{story.description}</p>
+  </div>
+</a>
+
+<style>
+.related-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  transition: opacity 0.2s;
+}
+
+.related-card:hover { opacity: 0.65; }
+
+.related-card__media {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 12px;
+  clip-path: inset(0 round 12px);
+  background: var(--bg-secondary);
+}
+
+.related-card__media img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease);
+}
+
+.related-card:hover .related-card__media img { transform: scale(1.025); }
+
+.related-card__body { padding-top: 1rem; }
+
+.related-card__kind {
+  display: block;
+  color: var(--ink-faint);
+  margin-bottom: 0.55rem;
+}
+
+.related-card h3 {
+  font-family: var(--font-brand);
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.related-card p {
+  color: var(--ink-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+.related-card.is-text-only { grid-template-rows: 1fr; }
+</style>

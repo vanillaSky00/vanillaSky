@@ -24,8 +24,8 @@ export const SITE_CONFIG = {
   // Navigation links
   NAV: [
     { label: "Work", href: "/work" },
+    { label: "Writing", href: "/writing" },
     { label: "About", href: "/about" },
-    { label: "Writing", href: "/blog" },
     { label: "Contact", href: "/#contact" },
   ],
 };

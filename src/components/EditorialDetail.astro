@@ -1,0 +1,364 @@
+---
+import { url } from '../config';
+import RelatedStoryCard from './RelatedStoryCard.astro';
+
+interface HeroVideo {
+  src: string;
+  poster?: string;
+  caption?: string;
+}
+
+interface LinkItem {
+  label: string;
+  href: string;
+}
+
+interface RelatedStory {
+  kind: 'project' | 'writing';
+  href: string;
+  title: string;
+  description: string;
+  previewImage?: string;
+}
+
+interface Props {
+  backHref: string;
+  backLabel: string;
+  title: string;
+  subtitle?: string;
+  description: string;
+  tags: string[];
+  meta: string;
+  heroImage?: string;
+  heroVideo?: HeroVideo;
+  links?: LinkItem[];
+  related: RelatedStory[];
+  titleInSummary?: boolean;
+}
+
+const {
+  backHref,
+  backLabel,
+  title,
+  subtitle,
+  description,
+  tags,
+  meta,
+  heroImage,
+  heroVideo,
+  links = [],
+  related,
+  titleInSummary = false,
+} = Astro.props;
+
+const hasHero = Boolean(heroVideo || heroImage);
+---
+
+<article class="editorial section container">
+  <a href={url(backHref)} class="editorial__back label">← {backLabel}</a>
+
+  <header class="editorial__header stagger">
+    {!titleInSummary && (
+      <>
+        <p class="editorial__meta label">{meta}</p>
+        <h1 class="editorial__title">
+          {title}
+          {subtitle && <span class="editorial__subtitle">{subtitle}</span>}
+        </h1>
+      </>
+    )}
+
+    <div class:list={['editorial__lead', { 'is-text-only': !hasHero }]}>
+      {heroVideo ? (
+        <figure class="editorial__media">
+          <video
+            src={url(heroVideo.src)}
+            poster={heroVideo.poster ? url(heroVideo.poster) : undefined}
+            controls
+            preload="metadata"
+            playsinline
+          ></video>
+          {heroVideo.caption && (
+            <figcaption class="label">{heroVideo.caption}</figcaption>
+          )}
+        </figure>
+      ) : heroImage ? (
+        <figure class="editorial__media">
+          <img src={url(heroImage)} alt={`${title} lead`} />
+        </figure>
+      ) : null}
+
+      <div class="editorial__summary">
+        {titleInSummary && (
+          <div>
+            <p class="editorial__meta label">{meta}</p>
+            <h1 class="editorial__title editorial__title--summary">
+              {title}
+              {subtitle && <span class="editorial__subtitle">{subtitle}</span>}
+            </h1>
+          </div>
+        )}
+        <p>{description}</p>
+        <div class="editorial__tags">
+          {tags.map((tag) => <span class="label">{tag}</span>)}
+        </div>
+        {links.length > 0 && (
+          <div class="editorial__links">
+            {links.map((link) => (
+              <a href={link.href} target="_blank" rel="noopener" class="label">
+                {link.label} ↗
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </header>
+
+  <div class="editorial__body prose">
+    <slot />
+  </div>
+
+  {related.length > 0 && (
+    <section class="editorial__related" aria-labelledby="related-heading">
+      <p class="label">Related Stories</p>
+      <h2 id="related-heading">Keep reading</h2>
+      <div class="editorial__related-grid">
+        {related.map((story) => <RelatedStoryCard story={story} />)}
+      </div>
+    </section>
+  )}
+</article>
+
+<style>
+.editorial {
+  --article-font: Inter, Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  padding-top: calc(4rem + 1.5rem);
+  max-width: var(--max-w);
+}
+
+.editorial__back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--ink-muted);
+  transition: color 0.2s;
+}
+
+.editorial__back:hover { color: var(--ink); }
+
+.editorial__meta {
+  color: var(--ink-faint);
+  margin-bottom: 1rem;
+}
+
+.editorial__title {
+  font-family: var(--font-code);
+  font-size: clamp(2.25rem, 5vw, 4.75rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  max-width: 18ch;
+}
+
+.editorial__subtitle {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.5em;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  opacity: 0.5;
+}
+
+.editorial__title--summary {
+  font-size: clamp(1.8rem, 3.2vw, 3rem);
+  max-width: none;
+}
+
+.editorial__lead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.75fr);
+  margin-top: 1.5rem;
+}
+
+.editorial__lead.is-text-only { grid-template-columns: minmax(0, 760px); }
+
+.editorial__media {
+  margin: 0;
+  min-width: 0;
+  padding-block: 2rem;
+  padding-right: 2rem;
+}
+
+.editorial__media img,
+.editorial__media video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.editorial__media video {
+  aspect-ratio: 26 / 15;
+  object-fit: cover;
+}
+
+.editorial__media figcaption {
+  margin-top: 0.55rem;
+  color: var(--ink-faint);
+}
+
+.editorial__summary {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.is-text-only .editorial__summary {
+  padding-inline: 0;
+}
+
+.editorial__summary > p {
+  font-family: var(--article-font);
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.editorial__tags,
+.editorial__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.editorial__tags span {
+  border: 1px solid var(--border-strong);
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+}
+
+.editorial__links {
+  gap: 1rem;
+  color: var(--accent);
+}
+
+.editorial__links a { transition: opacity 0.2s; }
+.editorial__links a:hover { opacity: 0.6; }
+
+.editorial__body {
+  max-width: 65ch;
+  margin: 4rem auto 0;
+  font-family: var(--article-font);
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.78;
+  letter-spacing: 0;
+}
+
+.editorial__body :global(p) { margin-bottom: 1.35em; }
+
+.editorial__body :global(h1),
+.editorial__body :global(h2),
+.editorial__body :global(h3) {
+  font-family: var(--font-code);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.editorial__body :global(h1) {
+  font-size: 2.125rem;
+  margin-bottom: 0.8em;
+}
+
+.editorial__body :global(h2) {
+  font-size: 1.625rem;
+  margin: 2.5em 0 0.7em;
+}
+
+.editorial__body :global(h3) {
+  font-size: 1.25rem;
+  margin: 2em 0 0.5em;
+}
+
+.editorial__body :global(ul),
+.editorial__body :global(ol) {
+  padding-left: 1.5rem;
+  margin-bottom: 1.4em;
+}
+
+.editorial__body :global(li) { margin-bottom: 0.4em; }
+
+.editorial__body :global(a) {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.editorial__body :global(blockquote) {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.2rem;
+  color: var(--ink-faint);
+  font-style: italic;
+  margin-block: 1.5em;
+}
+
+.editorial__body :global(:not(pre) > code) {
+  font-family: var(--font-code);
+  font-size: 0.92em;
+  background: var(--bg-secondary);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+.editorial__body :global(img),
+.editorial__body :global(video),
+.editorial__body :global(iframe) {
+  width: 100%;
+  height: auto;
+  margin-block: 1.8em;
+}
+
+.editorial__body :global(.wide-media) {
+  width: min(960px, calc(100vw - 2 * var(--gutter)));
+  max-width: none;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.editorial__body :global(hr) {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin-block: 2.5em;
+}
+
+.editorial__related {
+  margin-top: 6rem;
+  padding-top: 2rem;
+}
+
+.editorial__related > h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  margin: 0.6rem 0 2.5rem;
+}
+
+.editorial__related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 760px) {
+  .editorial__lead { grid-template-columns: 1fr; }
+  .editorial__media { padding-right: 0; }
+  .editorial__summary {
+    padding-inline: 0;
+  }
+  .editorial__related-grid { grid-template-columns: 1fr; }
+  .editorial__body { font-size: 1rem; }
+}
+</style>

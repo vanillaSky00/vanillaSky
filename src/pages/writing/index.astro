@@ -7,10 +7,25 @@ import {
   formatShortDate,
   getPostUpdatedDate,
   getReadingMinutes,
-} from '../../lib/blogMeta';
+} from '../../lib/writingMeta';
+import { toProjectSummary, toWritingSummary } from '../../lib/content.js';
 
-const allPosts = await getCollection('blog', ({ data }) => !data.draft || import.meta.env.DEV);
-const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const writing = await getCollection('writing', ({ data }) => !data.draft || import.meta.env.DEV);
+const projects = await getCollection('projects');
+
+const entries = [
+  ...writing.map((post) => ({
+    ...toWritingSummary(post),
+    meta: [
+      `Updated ${formatShortDate(getPostUpdatedDate(post))}`,
+      formatReadingTime(getReadingMinutes(post.body)),
+    ],
+  })),
+  ...projects.map((project) => ({
+    ...toProjectSummary(project),
+    meta: [project.data.year, project.data.category],
+  })),
+].sort((a, b) => b.date - a.date || a.title.localeCompare(b.title));
 ---
 
 <BaseLayout title="Writing" description="Essays and notes by vanillaSky00.">
@@ -23,19 +38,18 @@ const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueO
     </header>
 
     <div class="blog-list">
-      {posts.map((post, i) => (
+      {entries.map((entry, i) => (
         <a
-          href={url(`/blog/${post.slug}`)}
+          href={url(entry.href)}
           class="blog-row"
           style={`animation-delay: ${i * 0.06}s`}
         >
           <span class="blog-row__meta label">
-            <span>Updated {formatShortDate(getPostUpdatedDate(post))}</span>
-            <span>{formatReadingTime(getReadingMinutes(post.body))}</span>
+            {entry.meta.map((line) => <span>{line}</span>)}
           </span>
-          <span class="blog-row__title">{post.data.title}</span>
+          <span class="blog-row__title">{entry.title}</span>
           <div class="blog-row__tags">
-            {post.data.tags.map(tag => (
+            {entry.tags.map(tag => (
               <span class="blog-row__tag label">{tag}</span>
             ))}
           </div>
@@ -43,7 +57,7 @@ const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueO
         </a>
       ))}
 
-      {posts.length === 0 && (
+      {entries.length === 0 && (
         <p class="blog-empty label">No posts yet.</p>
       )}
     </div>

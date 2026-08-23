@@ -1,6 +1,6 @@
 import type { CollectionEntry } from 'astro:content';
 
-type BlogPost = CollectionEntry<'blog'>;
+type WritingPost = CollectionEntry<'writing'>;
 
 const WORDS_PER_MINUTE = 225;
 
@@ -16,7 +16,7 @@ const longDateFormatter = new Intl.DateTimeFormat('en', {
   day: 'numeric',
 });
 
-export function getPostUpdatedDate(post: BlogPost) {
+export function getPostUpdatedDate(post: WritingPost) {
   return post.data.updatedDate ?? post.data.date;
 }
 

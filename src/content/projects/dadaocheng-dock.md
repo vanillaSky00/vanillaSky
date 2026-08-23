@@ -6,9 +6,6 @@ category: "Photography"
 tags: ["Photography", "Urban", "Documentary"]
 description: "Golden hour at the historic Dadaocheng waterfront."
 coverImage: "/images/dadaocheng-cover.jpg"
-images:
-  - "/images/dadaocheng-01.jpg"
-  - "/images/dadaocheng-02.jpg"
 featured: true
 order: 4
 ---

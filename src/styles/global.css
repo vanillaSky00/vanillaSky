@@ -72,6 +72,12 @@ body {
   overflow-x: hidden;
 }
 
+img,
+video,
+iframe {
+  border-radius: 12px;
+}
+
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 button { cursor: pointer; border: none; background: none; font: inherit; }
