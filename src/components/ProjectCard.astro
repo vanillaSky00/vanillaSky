@@ -43,7 +43,7 @@ const p = project.data;
       <h3 class="project-card__title">
         {p.title}
         {p.subtitle && (
-          <span class="project-card__subtitle"> — {p.subtitle}</span>
+          <span class="project-card__subtitle">{p.subtitle}</span>
         )}
       </h3>
       <p class="project-card__desc">{p.description}</p>
@@ -61,8 +61,6 @@ const p = project.data;
 <style>
 .project-card {
   width: 100%;
-  max-width: 1040px;
-  margin-inline: auto;
   animation: fadeUp 0.6s var(--ease) both;
 }
 
@@ -160,7 +158,9 @@ const p = project.data;
 
 .project-card__subtitle {
   display: block;
+  font-size: 0.7em;
   font-style: italic;
+  line-height: 1.35;
   opacity: 0.6;
   text-align: left;
   margin-top: 0.25rem;
@@ -197,25 +197,11 @@ const p = project.data;
   color: var(--accent);
 }
 
-/* Alternate layout: odd cards flip image/text */
-.project-card:nth-child(even) .project-card__link {
-  direction: rtl;
-}
-.project-card:nth-child(even) .project-card__body {
-  direction: ltr;
-}
-.project-card:nth-child(even) .project-card__media {
-  direction: ltr;
-}
-
 @media (max-width: 700px) {
-  .project-card__link,
-  .project-card:nth-child(even) .project-card__link {
+  .project-card__link {
     grid-template-columns: 1fr;
-    direction: ltr;
   }
-  .project-card__body,
-  .project-card:nth-child(even) .project-card__body {
+  .project-card__body {
     padding: 1.5rem;
   }
 }
