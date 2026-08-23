@@ -5,9 +5,9 @@ year: "2025"
 category: "Photography"
 tags: ["Photography", "Urban", "Documentary"]
 description: "Golden hour at the historic Dadaocheng waterfront."
-coverImage: "/images/dadaocheng-cover.jpg"
+coverImage: "/images/covers/dadaocheng-cover.jpg"
 featured: true
-order: 4
+order: 6
 ---
 
 ## About the Project

@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { projectYearTimestamp, rankRelated } from '../src/lib/content.js';
 
-const story = (id, tags, date, title = id) => ({
+const story = (id, tags, date, title = id, kind = 'writing') => ({
   id,
-  kind: 'writing',
+  kind,
   slug: id,
   href: `/writing/${id}`,
   title,
@@ -40,6 +40,17 @@ test('rankRelated uses newest date then title for deterministic fallback', () =>
   assert.deepEqual(
     rankRelated(current, candidates).map(({ id }) => id),
     ['alpha', 'zulu', 'older'],
+  );
+});
+
+test('rankRelated prefers Work when tag scores are equal', () => {
+  const current = story('current', ['AI'], 10);
+  const writing = story('writing', ['AI'], 30);
+  const work = story('work', ['AI'], 20, 'Work', 'project');
+
+  assert.deepEqual(
+    rankRelated(current, [writing, work]).map(({ id }) => id),
+    ['work', 'writing'],
   );
 });
 

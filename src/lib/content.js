@@ -58,6 +58,7 @@ export function rankRelated(current, candidates, limit = 3) {
     }))
     .sort((a, b) =>
       b.score - a.score
+      || Number(b.entry.kind === 'project') - Number(a.entry.kind === 'project')
       || b.entry.date - a.entry.date
       || a.entry.title.localeCompare(b.entry.title),
     )

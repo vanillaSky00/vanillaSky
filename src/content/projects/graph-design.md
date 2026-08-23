@@ -1,12 +1,12 @@
 ---
 title: "Graph Design"
-subtitle: "A visual reflection on 90s anime through an acid design lens"
+subtitle: "Combining hand-drawn craft with AI for a faster, higher-quality design workflow"
 year: "2023–2026"
 category: "Graphic Design"
 tags: ["Poster", "Typography", "Branding", "CTF"]
 description: "A collection of graphic work spanning event posters, CTF branding, and editorial design."
-coverImage: "/images/graphdesign-cover.png"
-featured: false
+coverImage: "/images/covers/graphdesign-cover.png"
+featured: true
 order: 5
 ---
 

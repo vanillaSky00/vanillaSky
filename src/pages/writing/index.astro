@@ -11,7 +11,7 @@ import {
 import { toProjectSummary, toWritingSummary } from '../../lib/content.js';
 
 const writing = await getCollection('writing', ({ data }) => !data.draft || import.meta.env.DEV);
-const projects = await getCollection('projects');
+const projects = await getCollection('projects', ({ data }) => !data.draft || import.meta.env.DEV);
 
 const entries = [
   ...writing.map((post) => ({

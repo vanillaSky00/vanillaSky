@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await post.render();
 const writing = await getCollection('writing', ({ data }) => !data.draft || import.meta.env.DEV);
-const projects = await getCollection('projects');
+const projects = await getCollection('projects', ({ data }) => !data.draft || import.meta.env.DEV);
 const current = toWritingSummary(post);
 const related = rankRelated(current, [
   ...projects.map(toProjectSummary),

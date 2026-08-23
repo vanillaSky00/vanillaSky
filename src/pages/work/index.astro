@@ -4,7 +4,10 @@ import ProjectCard from '../../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
 import { url } from '../../config';
 
-const projects = (await getCollection('projects', ({ data }) => data.featured))
+const projects = (await getCollection(
+  'projects',
+  ({ data }) => data.featured && (!data.draft || import.meta.env.DEV),
+))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 ---
 

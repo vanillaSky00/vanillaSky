@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 import { rankRelated, toProjectSummary, toWritingSummary } from '../../lib/content.js';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
+  const projects = await getCollection('projects', ({ data }) => !data.draft || import.meta.env.DEV);
   return projects.map((project) => ({
     params: { slug: project.slug },
     props: { project },
@@ -15,7 +15,7 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await project.render();
 const writing = await getCollection('writing', ({ data }) => !data.draft || import.meta.env.DEV);
-const projects = await getCollection('projects');
+const projects = await getCollection('projects', ({ data }) => !data.draft || import.meta.env.DEV);
 const current = toProjectSummary(project);
 const related = rankRelated(current, [
   ...projects.map(toProjectSummary),

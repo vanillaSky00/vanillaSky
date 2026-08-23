@@ -1,13 +1,13 @@
 ---
 title: "Yuzuru Hanyu Gallery"
-subtitle: "Explore the different shades of the world"
+subtitle: "Using agent skills to build a highly artistic gallery website"
 year: "2026"
 category: "Web Design"
 tags: ["React", "Web Design", "Frontend", "Gallery"]
 description: "Exploring how far SDD prompt iteration can take a gallery website — without writing it by hand."
-coverImage: "/images/yuzuru-cover.png"
+coverImage: "/images/covers/yuzuru-cover.png"
 featured: true
-order: 3
+order: 4
 link: "https://vanillasky00.github.io/yuzuru-hanyu-gallery/"
 github: "https://github.com/vanillaSky00/yuzuru-hanyu-gallery"
 ---

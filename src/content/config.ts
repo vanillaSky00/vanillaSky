@@ -29,8 +29,9 @@ const projects = defineCollection({
     category: z.string(),
     tags: z.array(z.string()),
     description: z.string(),       // short — shown on card
-    coverImage: z.string(),
+    coverImage: z.string().optional(),
     heroVideo: heroVideo.optional(),
+    draft: z.boolean().optional().default(false),
     featured: z.boolean().optional().default(false),
     order: z.number().optional().default(99), // controls sort order on homepage
     link: z.string().optional(),
